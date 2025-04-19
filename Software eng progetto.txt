@@ -1,0 +1,5 @@
+per far partire il progetto di software:
+windows+r, scrivi services.msc, cerca mongoDB e avvia;
+apri due terminali,
+in uno vai nella cartella C:User\Filippo\Desktop\DeepSleep e scrivi "npm start", questo serve per far partire il server in backend su http://localhost5001;
+nel secondo vai nella cartella C:User\Filippo\Desktop\DeepSleep\client e scrivi "npm start", questo fa partire la webapp su http://localhost:3000;
