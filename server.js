@@ -1,56 +1,135 @@
-// Import required packages
-const express = require("express");           // Web framework to handle routing and server logic
-const mongoose = require("mongoose");         // ODM for MongoDB to define schemas and interact with the database
-const cors = require("cors");                 // Middleware to enable cross-origin resource sharing
+const express = require("express");
+const mongoose = require("mongoose");
+const cors = require("cors");
+const bcrypt = require("bcryptjs");
+const jwt = require("jsonwebtoken");
+const cookieParser = require("cookie-parser");
 
-// Initialize the Express app
+// === CONFIGURATION ===
 const app = express();
+const PORT = 5001;
+const JWT_SECRET = "super_secure_jwt_secret"; // Replace with env variable in production
 
-// Middleware setup
-app.use(cors());               // Allow cross-origin requests (e.g., from localhost:3000 to localhost:5001)
-app.use(express.json());       // Parse incoming JSON requests into JS objects
+// === MIDDLEWARE ===
+app.use(cors({
+  origin: "http://localhost:3000",
+  credentials: true
+}));
+app.use(express.json());
+app.use(cookieParser());
 
-// Connect to MongoDB using Mongoose
+// === MONGODB CONNECTION ===
 mongoose.connect("mongodb://localhost:27017/sleepTracker", {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 })
-.then(() => console.log("Connected to MongoDB"))               // Connection successful
-.catch(err => console.error("Could not connect to MongoDB", err)); // Connection failed
+.then(() => console.log("Connected to MongoDB"))
+.catch(err => console.error("MongoDB connection error:", err));
 
-// Define the schema (structure) for a sleep log entry
-const SleepLogSchema = new mongoose.Schema({
-  date: String,               // Stores the date of the log (e.g., "04/30/2025")
-  hours: Number,              // Stores the number of hours slept
+// === SCHEMAS ===
+const userSchema = new mongoose.Schema({
+  username: { type: String, unique: true },
+  password: String,
 });
 
-// Create a model from the schema
-const SleepLog = mongoose.model("SleepLog", SleepLogSchema);
-
-// === API Endpoints ===
-
-// GET all sleep logs
-app.get("/api/sleepLogs", async (req, res) => {
-  const logs = await SleepLog.find();         // Fetch all documents from the SleepLog collection
-  res.json(logs);                             // Send the results as JSON to the client
+const sleepLogSchema = new mongoose.Schema({
+  userId: mongoose.Schema.Types.ObjectId,
+  date: String,
+  hours: Number,
+  selectedTime: String,
+  mode: String,
 });
 
-// POST a new sleep log
-app.post("/api/sleepLogs", async (req, res) => {
-  const newLog = new SleepLog(req.body);      // Create a new SleepLog instance with request data
-  await newLog.save();                        // Save it to the MongoDB database
-  res.status(201).json(newLog);               // Respond with the saved log and status code 201 (Created)
-});
+const User = mongoose.model("User", userSchema);
+const SleepLog = mongoose.model("SleepLog", sleepLogSchema);
 
-// DELETE all sleep logs
-app.delete("/api/sleepLogs", async (req, res) => {
+// === AUTH MIDDLEWARE ===
+function authMiddleware(req, res, next) {
+  const token = req.cookies.token;
+  if (!token) return res.status(401).json({ error: "Unauthorized" });
+
   try {
-    await SleepLog.deleteMany({});            // Delete all documents in the SleepLog collection
-    res.json({ message: "All sleep logs deleted successfully." }); // Respond with success message
-  } catch (error) {
-    res.status(500).json({ error: "Failed to clear sleep logs" }); // Respond with error if deletion fails
+    const decoded = jwt.verify(token, JWT_SECRET);
+    req.user = decoded; // { id, username }
+    next();
+  } catch {
+    res.status(401).json({ error: "Invalid token" });
   }
+}
+
+// === AUTH ROUTES ===
+
+// Register
+app.post("/api/register", async (req, res) => {
+  const { username, password } = req.body;
+  if (!username || !password) return res.status(400).json({ error: "Missing fields" });
+
+  const existing = await User.findOne({ username });
+  if (existing) return res.status(400).json({ error: "Username already exists" });
+
+  const hashed = await bcrypt.hash(password, 10);
+  const user = new User({ username, password: hashed });
+  await user.save();
+  res.status(201).json({ message: "User registered" });
 });
 
-// Start the server on port 5001
-app.listen(5001, () => console.log("Server running on port 5001")); // Log a message to confirm the server is running
+// Login
+app.post("/api/login", async (req, res) => {
+  const { username, password } = req.body;
+  const user = await User.findOne({ username });
+  if (!user) return res.status(400).json({ error: "Invalid credentials" });
+
+  const isMatch = await bcrypt.compare(password, user.password);
+  if (!isMatch) return res.status(400).json({ error: "Invalid credentials" });
+
+  const token = jwt.sign({ id: user._id, username }, JWT_SECRET, { expiresIn: "2d" });
+  res.cookie("token", token, {
+    httpOnly: true,
+    sameSite: "Lax",
+    secure: false // Set to true in production with HTTPS
+  });
+  res.json({ message: "Logged in" });
+});
+
+// Logout
+app.post("/api/logout", (req, res) => {
+  res.clearCookie("token");
+  res.json({ message: "Logged out" });
+});
+
+// Get current user info
+app.get("/api/me", authMiddleware, (req, res) => {
+  res.json({ user: req.user });
+});
+
+// === SLEEP LOG ROUTES ===
+
+// Get all logs for authenticated user
+app.get("/api/sleepLogs", authMiddleware, async (req, res) => {
+  const logs = await SleepLog.find({ userId: req.user.id });
+  res.json(logs);
+});
+
+//da togliere prima di rendere pubblica la webapp
+app.get("/api/users", (req, res) => {
+  // WARNING: only expose this in development/testing!
+  res.json(users.map(u => ({ username: u.username })));
+});
+
+// Create new log
+app.post("/api/sleepLogs", authMiddleware, async (req, res) => {
+  const log = new SleepLog({ ...req.body, userId: req.user.id });
+  await log.save();
+  res.status(201).json(log);
+});
+
+// Delete all logs for this user
+app.delete("/api/sleepLogs", authMiddleware, async (req, res) => {
+  await SleepLog.deleteMany({ userId: req.user.id });
+  res.json({ message: "Sleep logs cleared" });
+});
+
+// === SERVER START ===
+app.listen(PORT, () => {
+  console.log(`Server running on http://localhost:${PORT}`);
+});
