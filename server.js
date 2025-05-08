@@ -1,9 +1,17 @@
 const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
+//security for password part
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
+//cookie part
 const cookieParser = require("cookie-parser");
+//exposed in breaches part for the registration
+const axios = require("axios");
+const crypto = require("crypto");
+//ratelimit part for the login
+const rateLimit = require("express-rate-limit");
+
 
 // === CONFIGURATION ===
 const app = express();
@@ -60,21 +68,84 @@ function authMiddleware(req, res, next) {
 // === AUTH ROUTES ===
 
 // Register
+
+// Checks if the password has been exposed in breaches
+async function isPasswordBreached(password) {
+  const sha1 = crypto.createHash("sha1").update(password).digest("hex").toUpperCase();
+  const prefix = sha1.slice(0, 5);
+  const suffix = sha1.slice(5);
+
+  try {
+    const response = await axios.get(`https://api.pwnedpasswords.com/range/${prefix}`);
+    const breachedList = response.data.split("\r\n").map(line => line.split(":")[0]);
+
+    return breachedList.includes(suffix);
+  } catch (err) {
+    console.error("HIBP password check failed", err.message);
+    // You can choose to fail closed (reject) or fail open (allow)
+    return false;
+  }
+}
+
+//common password part
+const commonPasswords = ["password123","12345678"];
+
 app.post("/api/register", async (req, res) => {
   const { username, password } = req.body;
-  if (!username || !password) return res.status(400).json({ error: "Missing fields" });
+
+  if (!username || !password) {
+    return res.status(400).json({ error: "Missing fields" });
+  }
+
+  if (password.length > 72) {
+    return res.status(400).json({ error: "Password must not exceed 72 characters" });
+  }
+
+  const passwordRegex = /^(?=.*\d).{8,}$/;
+  if (!passwordRegex.test(password)) {
+    return res.status(400).json({
+      error: "Password must be at least 8 characters long and include at least one number",
+    });
+  }
+
+  // Check against common weak passwords
+  if (commonPasswords.includes(password.toLowerCase())) {
+    return res.status(400).json({ error: "Password is too common. Choose a stronger one." });
+  }
+
+  const isBreached = await isPasswordBreached(password);
+  if (isBreached) {
+    return res.status(400).json({
+      error: "This password has appeared in data breaches. Please choose a stronger one.",
+    });
+  }
 
   const existing = await User.findOne({ username });
-  if (existing) return res.status(400).json({ error: "Username already exists" });
+  if (existing) {
+    return res.status(400).json({ error: "Username already exists" });
+  }
 
-  const hashed = await bcrypt.hash(password, 10);
-  const user = new User({ username, password: hashed });
-  await user.save();
-  res.status(201).json({ message: "User registered" });
+  try {
+    const hashed = await bcrypt.hash(password, 10);
+    const user = new User({ username, password: hashed });
+    await user.save();
+    res.status(201).json({ message: "User registered" });
+  } catch (err) {
+    console.error("Registration error:", err);
+    res.status(500).json({ error: "Internal server error" });
+  }
 });
 
 // Login
-app.post("/api/login", async (req, res) => {
+
+// Limit to 5 login attempts per IP per 15 minutes
+const loginLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 10,
+  message: { error: "Too many login attempts. Please try again later." },
+});
+
+app.post("/api/login", loginLimiter, async (req, res) => {
   const { username, password } = req.body;
   const user = await User.findOne({ username });
   if (!user) return res.status(400).json({ error: "Invalid credentials" });
@@ -110,10 +181,14 @@ app.get("/api/sleepLogs", authMiddleware, async (req, res) => {
   res.json(logs);
 });
 
-//da togliere prima di rendere pubblica la webapp
-app.get("/api/users", (req, res) => {
-  // WARNING: only expose this in development/testing!
-  res.json(users.map(u => ({ username: u.username })));
+// Get all users - only for development/testing!
+app.get("/api/users", async (req, res) => {
+  try {
+    const users = await User.find({}, "username"); // Only select the username field
+    res.json(users);
+  } catch (err) {
+    res.status(500).json({ error: "Failed to fetch users" });
+  }
 });
 
 // Create new log
