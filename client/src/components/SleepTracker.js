@@ -85,8 +85,78 @@ function SleepTracker() {
   };
 
   const confirmSelection = async () => {
-    if (!selectedRecommendation) return alert("Please select a time.");
-    if (!user) return alert("You must be logged in to log sleep data.");
+    if (!selectedRecommendation) {
+      // Show a styled popup if no time is selected
+      const popup = document.createElement("div");
+      popup.innerText = "Please select a time.";
+      Object.assign(popup.style, {
+        position: "fixed",
+        top: "50%",
+        left: "50%",
+        transform: "translate(-50%, -50%)",
+        backgroundColor: "#333", // Match app's dark theme
+        color: "white",
+        padding: "20px 30px",
+        borderRadius: "10px",
+        boxShadow: "0 0 20px rgba(192, 132, 252, 0.6)", // Purple glow
+        fontFamily: "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif",
+        fontSize: "16px",
+        textAlign: "center",
+        zIndex: 2000,
+        animation: "fadeIn 0.3s ease",
+      });
+
+      document.body.appendChild(popup);
+
+      // Remove the popup after 2 seconds
+      setTimeout(() => {
+        popup.style.animation = "fadeOut 0.3s ease";
+        popup.addEventListener("animationend", () => popup.remove());
+      }, 2000);
+
+      return;
+    }
+
+    if (!user) {
+      // Show a styled popup if the user is not logged in
+      const popup = document.createElement("div");
+      popup.innerHTML = `
+        <p style="margin: 0; font-size: 16px; font-weight: bold;">You must be logged in to log sleep data.</p>
+        <button style="
+          margin-top: 15px;
+          padding: 10px 20px;
+          background-color: #7e22ce;
+          color: white;
+          border: none;
+          border-radius: 8px;
+          font-weight: bold;
+          font-size: 14px;
+          cursor: pointer;
+          box-shadow: 0 0 10px rgba(192, 132, 252, 0.6);
+          text-transform: uppercase;
+          transition: transform 0.2s ease;
+        " onmouseover="this.style.boxShadow='0 0 15px rgba(192, 132, 252, 0.8)'" onmouseout="this.style.boxShadow='0 0 10px rgba(192, 132, 252, 0.6)'" onclick="document.body.removeChild(this.parentElement)">Close</button>
+      `;
+      Object.assign(popup.style, {
+        position: "fixed",
+        top: "50%",
+        left: "50%",
+        transform: "translate(-50%, -50%)",
+        backgroundColor: "#333", // Match app's dark theme
+        color: "white",
+        padding: "20px 30px",
+        borderRadius: "10px",
+        boxShadow: "0 0 20px rgba(192, 132, 252, 0.6)", // Purple glow
+        fontFamily: "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif",
+        textAlign: "center",
+        zIndex: 2000,
+        animation: "fadeIn 0.3s ease",
+      });
+
+      document.body.appendChild(popup);
+
+      return;
+    }
 
     let sleepDurationHours = 0;
     if (mode === "bedtime") {
@@ -200,7 +270,20 @@ function SleepTracker() {
           <div style={{ textAlign: "right", marginBottom: "20px" }}>
             <button
               onClick={() => setShowLoginPopup(true)}
-              style={{ backgroundColor: "#0275d8", color: "white", border: "none", borderRadius: "5px", padding: "5px 10px", cursor: "pointer" }}
+              style={{
+                backgroundColor: "#7e22ce", // Match purple theme
+                color: "white",
+                border: "none",
+                borderRadius: "8px",
+                padding: "10px 15px",
+                fontWeight: "bold",
+                fontSize: "14px",
+                cursor: "pointer",
+                boxShadow: "0 0 10px rgba(192, 132, 252, 0.6)", // Glow effect
+                textTransform: "uppercase",
+              }}
+              onMouseEnter={(e) => (e.currentTarget.style.boxShadow = "0 0 15px rgba(192, 132, 252, 0.8)")}
+              onMouseLeave={(e) => (e.currentTarget.style.boxShadow = "0 0 10px rgba(192, 132, 252, 0.6)")}
             >
               Login / Register
             </button>
@@ -217,49 +300,138 @@ function SleepTracker() {
             left: 0,
             right: 0,
             bottom: 0,
-            backgroundColor: "rgba(0,0,0,0.5)",
+            backgroundColor: "rgba(0,0,0,0.8)", // Darker overlay
             display: "flex",
             justifyContent: "center",
             alignItems: "center",
             zIndex: 1000,
+            animation: "fadeIn 0.5s ease", // Fade-in animation
           }}
         >
-          <div style={{ backgroundColor: "#fff", padding: "30px", borderRadius: "10px", position: "relative", width: "300px" }}>
+          <div
+            style={{
+              backgroundColor: "#333", // Match app's dark theme
+              padding: "30px",
+              borderRadius: "10px",
+              position: "relative",
+              width: "350px",
+              boxShadow: "0 0 20px rgba(192, 132, 252, 0.6)", // Purple glow
+              color: "white",
+              fontFamily: "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif",
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center", // Center content horizontally
+              animation: "scaleIn 0.5s ease", // Scale-in animation
+            }}
+          >
             <button
               onClick={closePopup}
-              style={{ position: "absolute", top: "10px", right: "10px", background: "transparent", border: "none", fontSize: "18px", color: "red", cursor: "pointer" }}
+              style={{
+                position: "absolute",
+                top: "10px",
+                right: "10px",
+                background: "transparent",
+                border: "none",
+                fontSize: "18px",
+                color: "#c084fc", // Purple close button
+                cursor: "pointer",
+                transition: "transform 0.2s ease", // Button click animation
+              }}
+              onMouseDown={(e) => (e.currentTarget.style.transform = "scale(0.9)")}
+              onMouseUp={(e) => (e.currentTarget.style.transform = "scale(1)")}
             >
               &times;
             </button>
 
-            <h3 style={{ textAlign: "center" }}>{authMode === "login" ? "Login" : "Register"}</h3>
+            <h3
+              style={{
+                textAlign: "center",
+                textTransform: "uppercase",
+                fontWeight: "bold",
+                marginBottom: "20px",
+                fontSize: "20px",
+              }}
+            >
+              {authMode === "login" ? "Login" : "Register"}
+            </h3>
 
             <input
               type="text"
               placeholder="Username"
               value={authFields.username}
               onChange={(e) => setAuthFields({ ...authFields, username: e.target.value })}
-              style={{ width: "100%", marginBottom: "10px" }}
+              style={{
+                width: "100%",
+                maxWidth: "300px", // Ensure consistent width
+                marginBottom: "15px",
+                padding: "12px",
+                borderRadius: "8px",
+                border: "1px solid #ccc",
+                backgroundColor: "#222",
+                color: "white",
+                outline: "none",
+                fontSize: "16px",
+                textAlign: "center", // Center text inside input
+                transition: "all 0.3s",
+              }}
+              onFocus={(e) => (e.target.style.border = "1px solid #c084fc")}
+              onBlur={(e) => (e.target.style.border = "1px solid #ccc")}
             />
             <input
               type="password"
               placeholder="Password"
               value={authFields.password}
               onChange={(e) => setAuthFields({ ...authFields, password: e.target.value })}
-              style={{ width: "100%", marginBottom: "10px" }}
+              style={{
+                width: "100%",
+                maxWidth: "300px", // Ensure consistent width
+                marginBottom: "10px",
+                padding: "12px",
+                borderRadius: "8px",
+                border: "1px solid #ccc",
+                backgroundColor: "#222",
+                color: "white",
+                outline: "none",
+                fontSize: "16px",
+                textAlign: "center", // Center text inside input
+                transition: "all 0.3s",
+              }}
+              onFocus={(e) => (e.target.style.border = "1px solid #c084fc")}
+              onBlur={(e) => (e.target.style.border = "1px solid #ccc")}
             />
+            {authMode === "register" && (
+              <p
+                style={{
+                  color: "#c084fc", // Purple text
+                  fontSize: "18px",
+                  textAlign: "center",
+                  marginBottom: "15px",
+                }}
+              >
+                The password must contain at least a number and a special character.
+              </p>
+            )}
 
             <button
               onClick={handleAuth}
               style={{
                 width: "100%",
-                padding: "10px",
-                backgroundColor: "#4CAF50",
+                maxWidth: "300px", // Ensure consistent width
+                padding: "12px",
+                backgroundColor: "#7e22ce", // Purple button
                 color: "white",
-                marginBottom: "10px",
+                marginBottom: "15px",
                 border: "none",
-                borderRadius: "5px",
+                borderRadius: "8px",
+                fontWeight: "bold",
+                fontSize: "16px",
+                cursor: "pointer",
+                boxShadow: "0 0 10px rgba(192, 132, 252, 0.6)", // Glow effect
+                textTransform: "uppercase",
+                transition: "transform 0.2s ease", // Button click animation
               }}
+              onMouseDown={(e) => (e.currentTarget.style.transform = "scale(0.95)")}
+              onMouseUp={(e) => (e.currentTarget.style.transform = "scale(1)")}
             >
               {authMode === "login" ? "Login" : "Register"}
             </button>
@@ -267,12 +439,20 @@ function SleepTracker() {
               onClick={() => setAuthMode(authMode === "login" ? "register" : "login")}
               style={{
                 width: "100%",
-                padding: "10px",
-                backgroundColor: "#FF9900",
+                maxWidth: "300px", // Ensure consistent width
+                padding: "12px",
+                backgroundColor: "#444", // Darker button for secondary action
                 color: "white",
                 border: "none",
-                borderRadius: "5px",
+                borderRadius: "8px",
+                fontWeight: "bold",
+                fontSize: "14px",
+                cursor: "pointer",
+                textTransform: "uppercase",
+                transition: "transform 0.2s ease", // Button click animation
               }}
+              onMouseDown={(e) => (e.currentTarget.style.transform = "scale(0.95)")}
+              onMouseUp={(e) => (e.currentTarget.style.transform = "scale(1)")}
             >
               {authMode === "login" ? "Need an account? Register" : "Already have an account? Login"}
             </button>
@@ -318,6 +498,7 @@ function SleepTracker() {
       style={{
         width: "100%",
         maxWidth: "250px",
+        textAlign: "center",
         margin: "0 auto",
         display: "block",
         padding: "12px",
@@ -473,6 +654,7 @@ function SleepTracker() {
         value={bedtime}
         onChange={(e) => setBedtime(e.target.value)}
         style={{
+          textAlign: "center",
           width: "100%",
           maxWidth: "250px",
           margin: "0 auto",
@@ -489,6 +671,38 @@ function SleepTracker() {
         onFocus={(e) => e.target.style.border = "1px solid #c084fc"}
         onBlur={(e) => e.target.style.border = "1px solid #ccc"}
       />
+<button
+  onClick={() => {
+    const now = new Date();
+    const hours = now.getHours().toString().padStart(2, '0');
+    const minutes = now.getMinutes().toString().padStart(2, '0');
+    setBedtime(`${hours}:${minutes}`);
+  }}
+  style={{
+    width: "100%",
+    maxWidth: "250px",
+    margin: "10px auto 0 auto",
+    display: "block",
+    backgroundColor: "#7e22ce", // Viola scuro come il bottone "GET RECOMMENDATIONS"
+    color: "white",
+    border: "none",
+    borderRadius: "8px",
+    padding: "10px",
+    fontWeight: "bold",
+    fontSize: "14px",
+    cursor: "pointer",
+    transition: "all 0.3s ease",
+    boxShadow: "0 0 8px rgba(192, 132, 252, 0.6)", // Glow viola chiaro (#c084fc)
+    textTransform: "uppercase",
+    letterSpacing: "0.5px"
+  }}
+  onMouseEnter={(e) => e.currentTarget.style.boxShadow = "0 0 12px rgba(192, 132, 252, 0.8)"}
+  onMouseLeave={(e) => e.currentTarget.style.boxShadow = "0 0 8px rgba(192, 132, 252, 0.6)"}
+  onMouseDown={(e) => (e.currentTarget.style.transform = "scale(0.95)")}
+  onMouseUp={(e) => (e.currentTarget.style.transform = "scale(1)")}
+>
+  GO TO BED NOW
+</button>
     </div>
   </div>
   <div
@@ -533,6 +747,7 @@ function SleepTracker() {
         style={{
           width: "100%",
           maxWidth: "250px",
+          textAlign: "center",
           margin: "0 auto",
           display: "block",
           padding: "12px",
@@ -573,6 +788,7 @@ function SleepTracker() {
       onChange={(e) => setFallAsleepTime(Number(e.target.value))}
       style={{
         width: "100%",
+        textAlign: "center", 
         maxWidth: "250px",
         margin: "0 auto",
         display: "block",
@@ -604,8 +820,10 @@ function SleepTracker() {
       fontSize: "16px",
       cursor: "pointer",
       boxShadow: "0 0 10px #7e22ce",
-      transition: "background-color 0.3s ease"
+      transition: "background-color 0.3s ease",
     }}
+    onMouseDown={(e) => (e.currentTarget.style.transform = "scale(0.95)")}
+    onMouseUp={(e) => (e.currentTarget.style.transform = "scale(1)")}
   >
     GET RECOMMENDATIONS
   </button>
@@ -684,8 +902,10 @@ function SleepTracker() {
           fontSize: "16px",
           cursor: "pointer",
           boxShadow: "0 0 10px #222",
-          transition: "background-color 0.3s ease"
+          transition: "background-color 0.3s ease",
         }}
+        onMouseDown={(e) => (e.currentTarget.style.transform = "scale(0.95)")}
+        onMouseUp={(e) => (e.currentTarget.style.transform = "scale(1)")}
       >
         CONFIRM SELECTION
       </button>
@@ -718,9 +938,37 @@ function SleepTracker() {
 
 export default SleepTracker;
 
-// Tooltip hover CSS (preferably move to App.css or a global stylesheet)
+// Tooltip hover CSS and animations (preferably move to App.css or a global stylesheet)
 const style = document.createElement("style");
 style.innerHTML = `
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes fadeOut {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes scaleIn {
+  from {
+    transform: scale(0.8);
+  }
+  to {
+    transform: scale(1);
+  }
+
+}
+
 .tooltip-alarm:hover div,
 .tooltip-bedtime:hover div {
   visibility: visible !important;
