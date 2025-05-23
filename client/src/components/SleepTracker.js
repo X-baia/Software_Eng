@@ -8,6 +8,8 @@ import {
   ResponsiveContainer,
 } from "recharts";
 
+import '../App.css';
+
 function SleepTracker() {
   const [mode, setMode] = useState("bedtime");
   const [bedtime, setBedtime] = useState("");
@@ -16,6 +18,7 @@ function SleepTracker() {
   const [age, setAge] = useState("");
   const [recommendations, setRecommendations] = useState([]);
   const [selectedRecommendation, setSelectedRecommendation] = useState("");
+  const [hoveredRecommendation, setHoveredRecommendation] = useState(null);
   const [sleepLog, setSleepLog] = useState([]);
   const [user, setUser] = useState(null);
   const [authMode, setAuthMode] = useState("login");
@@ -178,7 +181,10 @@ function SleepTracker() {
   };
 
   return (
-    <div style={{ backgroundColor: "#e6f2ff", minHeight: "100vh", padding: "40px", fontFamily: "Arial, sans-serif" }}>
+    <div
+      className="bg-neutral-950"
+      style={{ backgroundColor: "#000", minHeight: "100vh", padding: "40px", fontFamily: "Arial, sans-serif" }}
+    >
       <div style={{ position: "absolute", top: 20, right: 30 }}>
         {user ? (
           <div style={{ textAlign: "right", marginBottom: "20px" }}>
@@ -274,58 +280,414 @@ function SleepTracker() {
         </div>
       )}
 
-<h1 style={{ textAlign: "center", color: "#003366", marginBottom: "30px" }}>Sleep Time Recommendation</h1>
+<h1 className="deep-sleep-title">
+  DeepSleep
+</h1>
 
-<div style={{ maxWidth: "500px", margin: "0 auto", backgroundColor: "#ffffff", padding: "30px", borderRadius: "10px", boxShadow: "0 2px 10px rgba(0,0,0,0.1)" }}>
-  <div style={{ marginBottom: "15px" }}>
-    <label>Age: </label>
-    <input type="number" value={age} onChange={(e) => setAge(e.target.value)} />
-  </div>
-
-  <div style={{ marginBottom: "15px" }}>
+<div style={{
+  maxWidth: "500px",
+  margin: "0 auto",
+  backgroundColor: "#696969", // light gray
+  padding: "30px",
+  borderRadius: "10px",
+  boxShadow: "0 0 20px #c084fc", // purple glow
+  fontFamily: "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif",
+  color: "white"
+}}>
+  <div style={{
+    marginBottom: "25px",
+    borderBottom: "1px solid black",
+    paddingBottom: "20px"
+  }}>
     <label>
-      <input type="radio" value="bedtime" checked={mode === "bedtime"} onChange={() => setMode("bedtime")} />
-      Bedtime Mode
+      <span style={{
+        display: "block",
+        textAlign: "center",
+        marginBottom: "10px",
+        fontWeight: "bold",
+        fontFamily: "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif",
+        textTransform: "uppercase"
+      }}>
+        Age:
+      </span>
     </label>
-    <label style={{ marginLeft: "10px" }}>
-      <input type="radio" value="alarm" checked={mode === "alarm"} onChange={() => setMode("alarm")} />
-      Alarm Mode
-    </label>
+    <input
+      type="number"
+      value={age}
+      onChange={(e) => setAge(e.target.value)}
+      style={{
+        width: "100%",
+        maxWidth: "250px",
+        margin: "0 auto",
+        display: "block",
+        padding: "12px",
+        borderRadius: "8px",
+        border: "1px solid #ccc",
+        backgroundColor: "#333",
+        color: "white",
+        outline: "none",
+        fontSize: "18px",
+        transition: "all 0.3s",
+      }}
+      onFocus={(e) => e.target.style.border = "1px solid #c084fc"}
+      onBlur={(e) => e.target.style.border = "1px solid #ccc"}
+    />
   </div>
 
-  {mode === "bedtime" ? (
-    <div style={{ marginBottom: "15px" }}>
-      <label>Bedtime: </label>
-      <input type="time" value={bedtime} onChange={(e) => setBedtime(e.target.value)} />
+  <div style={{ display: "flex", alignItems: "center", justifyContent: "center", marginBottom: "20px", gap: "15px" }}>
+    <div style={{ position: "relative", display: "inline-block" }} className="tooltip-alarm">
+      <span
+        style={{
+          fontWeight: "bold",
+          textTransform: "uppercase",
+          textShadow: mode === "alarm" ? "0 0 8px #c084fc" : "none",
+          transition: "text-shadow 0.3s ease",
+        }}
+      >
+        Alarm Mode
+      </span>
+      <div style={{
+        visibility: "hidden",
+        opacity: 0,
+        transform: "translateY(-50%) scale(0.85)",
+        transition: "opacity 0.4s ease, transform 0.4s ease",
+        borderRadius: "12px",
+        boxShadow: "0 8px 20px rgba(192, 132, 252, 0.3)",
+        backgroundColor: "rgba(99, 33, 99, 0.7)",
+        padding: "10px 15px",
+        fontSize: "13px",
+        fontWeight: "700",
+        textTransform: "uppercase",
+        color: "#eee",
+        textAlign: "center",
+        position: "absolute",
+        zIndex: 10,
+        width: "220px",
+        top: "50%",
+        left: "-260px",
+        marginLeft: 0,
+        userSelect: "none"
+      }}>
+        Calculates when to go to bed for a given alarm time.
+      </div>
     </div>
-  ) : (
-    <div style={{ marginBottom: "15px" }}>
-      <label>Alarm Time: </label>
-      <input type="time" value={alarmTime} onChange={(e) => setAlarmTime(e.target.value)} />
+    <div
+      onClick={() => setMode(mode === "bedtime" ? "alarm" : "bedtime")}
+      style={{
+        width: "60px",
+        height: "30px",
+        borderRadius: "15px",
+        backgroundColor: "#333",
+        position: "relative",
+        cursor: "pointer",
+        transition: "background-color 0.3s ease",
+        boxShadow: "inset 0 0 5px rgba(0,0,0,0.5)"
+      }}
+    >
+      <div style={{
+        width: "26px",
+        height: "26px",
+        borderRadius: "50%",
+        backgroundColor: "#c084fc",
+        position: "absolute",
+        top: "2px",
+        left: mode === "bedtime" ? "32px" : "2px",
+        transition: "left 0.3s ease"
+      }} />
     </div>
-  )}
-
-  <div style={{ marginBottom: "15px" }}>
-    <label>Time to fall asleep (min): </label>
-    <input type="number" value={fallAsleepTime} onChange={(e) => setFallAsleepTime(Number(e.target.value))} />
+    <div style={{ position: "relative", display: "inline-block" }} className="tooltip-bedtime">
+      <span
+        style={{
+          fontWeight: "bold",
+          textTransform: "uppercase",
+          textShadow: mode === "bedtime" ? "0 0 8px #c084fc" : "none",
+          transition: "text-shadow 0.3s ease",
+        }}
+      >
+        Bedtime Mode
+      </span>
+      <div style={{
+        visibility: "hidden",
+        opacity: 0,
+        transform: "translateY(-50%) scale(0.85)",
+        transition: "opacity 0.4s ease, transform 0.4s ease",
+        borderRadius: "12px",
+        boxShadow: "0 8px 20px rgba(192, 132, 252, 0.3)",
+        backgroundColor: "rgba(99, 33, 99, 0.7)",
+        padding: "10px 15px",
+        fontSize: "13px",
+        fontWeight: "700",
+        textTransform: "uppercase",
+        color: "#eee",
+        textAlign: "center",
+        position: "absolute",
+        zIndex: 10,
+        width: "220px",
+        top: "50%",
+        left: "calc(100% + 20px)",
+        marginLeft: 0,
+        userSelect: "none"
+      }}>
+        Calculates the best wake-up time based on your bedtime.
+      </div>
+    </div>
   </div>
 
-  <button onClick={calculateTimes} style={{ width: "100%", marginTop: "10px" }}>
-    Get Recommendations
+  <div
+    style={mode === "bedtime" ?
+      {
+        opacity: 1,
+        height: "auto",
+        overflow: "hidden",
+        transition: "opacity 0.5s ease, height 0.5s ease",
+        pointerEvents: "auto"
+      } :
+      {
+        opacity: 0,
+        height: 0,
+        overflow: "hidden",
+        transition: "opacity 0.5s ease, height 0.5s ease",
+        pointerEvents: "none"
+      }
+    }
+  >
+    <div style={{
+      marginBottom: "25px",
+      borderBottom: "1px solid black",
+      paddingBottom: "20px"
+    }}>
+      <label>
+        <span style={{
+          display: "block",
+          textAlign: "center",
+          marginBottom: "10px",
+          fontWeight: "bold",
+          fontFamily: "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif",
+          textTransform: "uppercase"
+        }}>
+          Bedtime:
+        </span>
+      </label>
+      <input
+        type="time"
+        value={bedtime}
+        onChange={(e) => setBedtime(e.target.value)}
+        style={{
+          width: "100%",
+          maxWidth: "250px",
+          margin: "0 auto",
+          display: "block",
+          padding: "12px",
+          borderRadius: "8px",
+          border: "1px solid #ccc",
+          backgroundColor: "#333",
+          color: "white",
+          outline: "none",
+          fontSize: "18px",
+          transition: "all 0.3s",
+        }}
+        onFocus={(e) => e.target.style.border = "1px solid #c084fc"}
+        onBlur={(e) => e.target.style.border = "1px solid #ccc"}
+      />
+    </div>
+  </div>
+  <div
+    style={mode === "alarm" ?
+      {
+        opacity: 1,
+        height: "auto",
+        overflow: "hidden",
+        transition: "opacity 0.5s ease, height 0.5s ease",
+        pointerEvents: "auto"
+      } :
+      {
+        opacity: 0,
+        height: 0,
+        overflow: "hidden",
+        transition: "opacity 0.5s ease, height 0.5s ease",
+        pointerEvents: "none"
+      }
+    }
+  >
+    <div style={{
+      marginBottom: "25px",
+      borderBottom: "1px solid black",
+      paddingBottom: "20px"
+    }}>
+      <label>
+        <span style={{
+          display: "block",
+          textAlign: "center",
+          marginBottom: "10px",
+          fontWeight: "bold",
+          fontFamily: "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif",
+          textTransform: "uppercase"
+        }}>
+          Alarm Time:
+        </span>
+      </label>
+      <input
+        type="time"
+        value={alarmTime}
+        onChange={(e) => setAlarmTime(e.target.value)}
+        style={{
+          width: "100%",
+          maxWidth: "250px",
+          margin: "0 auto",
+          display: "block",
+          padding: "12px",
+          borderRadius: "8px",
+          border: "1px solid #ccc",
+          backgroundColor: "#333",
+          color: "white",
+          outline: "none",
+          fontSize: "18px",
+          transition: "all 0.3s",
+        }}
+        onFocus={(e) => e.target.style.border = "1px solid #c084fc"}
+        onBlur={(e) => e.target.style.border = "1px solid #ccc"}
+      />
+    </div>
+  </div>
+
+  <div style={{
+    marginBottom: "25px",
+    borderBottom: "1px solid black",
+    paddingBottom: "20px"
+  }}>
+    <label>
+      <span style={{
+        display: "block",
+        textAlign: "center",
+        marginBottom: "10px",
+        fontWeight: "bold",
+        fontFamily: "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif",
+        textTransform: "uppercase"
+      }}>
+        Time to fall asleep (min):
+      </span>
+    </label>
+    <input
+      type="number"
+      value={fallAsleepTime}
+      onChange={(e) => setFallAsleepTime(Number(e.target.value))}
+      style={{
+        width: "100%",
+        maxWidth: "250px",
+        margin: "0 auto",
+        display: "block",
+        padding: "12px",
+        borderRadius: "8px",
+        border: "1px solid #ccc",
+        backgroundColor: "#333",
+        color: "white",
+        outline: "none",
+        fontSize: "18px",
+        transition: "all 0.3s",
+      }}
+      onFocus={(e) => e.target.style.border = "1px solid #c084fc"}
+      onBlur={(e) => e.target.style.border = "1px solid #ccc"}
+    />
+  </div>
+
+  <button
+    onClick={calculateTimes}
+    style={{
+      width: "100%",
+      marginTop: "10px",
+      backgroundColor: "#7e22ce",
+      color: "white",
+      border: "none",
+      borderRadius: "8px",
+      padding: "12px",
+      fontWeight: "bold",
+      fontSize: "16px",
+      cursor: "pointer",
+      boxShadow: "0 0 10px #7e22ce",
+      transition: "background-color 0.3s ease"
+    }}
+  >
+    GET RECOMMENDATIONS
   </button>
 
   {recommendations.length > 0 && (
     <>
-      <h3>Suggested {mode === "bedtime" ? "Wake Times" : "Bedtimes"}:</h3>
-      <ul>
-        {recommendations.map((time, index) => (
-          <li key={index} style={{ cursor: "pointer", fontWeight: selectedRecommendation === time ? "bold" : "normal" }} onClick={() => setSelectedRecommendation(time)}>
-            {time}
-          </li>
-        ))}
+      <h3
+        style={{
+          textTransform: "uppercase",
+          textAlign: "center",
+          fontSize: "18px"
+        }}
+      >
+        Suggested {mode === "bedtime" ? "Wake Times" : "Bedtimes"}:
+      </h3>
+      <ul
+        style={{
+          display: "block",
+          width: "100%",
+          maxWidth: "220px",
+          margin: "20px auto 0 auto",
+          paddingLeft: 0,
+          listStyleType: "none",
+          textAlign: "center",
+          fontSize: "14px"
+        }}
+      >
+        {recommendations.map((time, index) => {
+          const isCentral = index === Math.floor(recommendations.length / 2);
+          const isHovered = hoveredRecommendation === time;
+          const enlarge =
+  isHovered ||
+  (!hoveredRecommendation && selectedRecommendation === time) ||
+  (!hoveredRecommendation && !selectedRecommendation && isCentral);
+          return (
+            <li
+              key={index}
+              style={{
+                display: "block",
+                width: "100%",
+                cursor: "pointer",
+                fontWeight: enlarge ? "bold" : "normal",
+                textTransform: "uppercase",
+                fontSize: enlarge ? "16px" : "14px",
+                transform: `scale(${enlarge ? 1.1 : 1})`,
+                boxShadow: enlarge ? "0 0 12px #c084fc" : "none",
+                background: selectedRecommendation === time ? "#c084fc33" : "transparent",
+                borderRadius: "8px",
+                padding: "6px 12px",
+                transition: "all 0.3s ease",
+                textAlign: "center",
+                whiteSpace: "nowrap",
+                minWidth: "150px",
+
+              }}
+              onClick={() => setSelectedRecommendation(time)}
+              onMouseEnter={() => setHoveredRecommendation(time)}
+              onMouseLeave={() => setHoveredRecommendation(null)}
+            >
+              {time} {isCentral ? "(RECOMMENDED)" : ""}
+            </li>
+          );
+        })}
       </ul>
-      <button onClick={confirmSelection} style={{ marginTop: "10px" }}>
-        Confirm Selection
+      <button
+        onClick={confirmSelection}
+        style={{
+          marginTop: "10px",
+          width: "100%",
+          backgroundColor: "#111",
+          color: "white",
+          border: "none",
+          borderRadius: "8px",
+          padding: "12px",
+          fontWeight: "bold",
+          fontSize: "16px",
+          cursor: "pointer",
+          boxShadow: "0 0 10px #222",
+          transition: "background-color 0.3s ease"
+        }}
+      >
+        CONFIRM SELECTION
       </button>
     </>
   )}
@@ -355,3 +717,15 @@ function SleepTracker() {
 }
 
 export default SleepTracker;
+
+// Tooltip hover CSS (preferably move to App.css or a global stylesheet)
+const style = document.createElement("style");
+style.innerHTML = `
+.tooltip-alarm:hover div,
+.tooltip-bedtime:hover div {
+  visibility: visible !important;
+  opacity: 1 !important;
+  transform: translateY(-50%) scale(1);
+}
+`;
+document.head.appendChild(style);
