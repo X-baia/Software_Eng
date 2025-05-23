@@ -8,6 +8,8 @@ import {
   ResponsiveContainer,
 } from "recharts";
 
+import starTips from "../starTips";
+
 import '../App.css';
 
 function SleepTracker() {
@@ -40,7 +42,7 @@ function SleepTracker() {
   }, []);
 
   const getSleepRangeByAge = (age) => {
-    if (age >= 1 && age <= 2) return [11, 14];
+    if (age >= 1 && age <= 2) return [12, 14];
     if (age >= 3 && age <= 5) return [10, 13];
     if (age >= 6 && age <= 12) return [9, 12];
     if (age >= 13 && age <= 18) return [8, 10];
@@ -712,8 +714,31 @@ function SleepTracker() {
   </div>
 )}
 
-    </div>
-  );
+
+<div class = "star-container">
+  <div class="glow-star">
+    <svg viewBox="0 0 100 100" class="star-svg" xmlns="http://www.w3.org/2000/svg">
+      <polygon points="50,10 60,50 50,90 40,50" />
+      <polygon points="10,50 50,60 90,50 50,40" />
+    </svg>
+  <div class = "tip">avoid caffeine, alcol and nicotine before bed! </div>
+  </div>
+</div>
+
+
+<div  class = "text-tips">
+  Want some tips? Touch the stars!
+</div>
+
+
+
+
+
+
+
+
+</div>
+);
 }
 
 export default SleepTracker;
