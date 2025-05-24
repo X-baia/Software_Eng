@@ -8,8 +8,7 @@ import {
   ResponsiveContainer,
 } from "recharts";
 
-import starTips from "../starTips";
-
+import TipsStar from "../TipsStar";
 import '../App.css';
 
 function SleepTracker() {
@@ -715,14 +714,29 @@ function SleepTracker() {
 )}
 
 
-<div class = "star-container">
-  <div class="glow-star">
-    <svg viewBox="0 0 100 100" class="star-svg" xmlns="http://www.w3.org/2000/svg">
-      <polygon points="50,10 60,50 50,90 40,50" />
-      <polygon points="10,50 50,60 90,50 50,40" />
-    </svg>
-  <div class = "tip">avoid caffeine, alcol and nicotine before bed! </div>
-  </div>
+<div>
+  <TipsStar tip = "limit caffeine in the afternoon!" left = "6%" top = "15%"></TipsStar>
+  <TipsStar tip = "try to not use your devices 1 hour before bed" left = "14%" top = "30%"></TipsStar>
+  <TipsStar tip = "try to wake up at the same time everyday!" left = "14%" top = "45%"></TipsStar>
+  <TipsStar tip = "block out sources of light!" left = "6%" top = "73%"></TipsStar>
+  <TipsStar tip = "take a warm shower or bath an hours before bed" left = "16%" top = "60%"></TipsStar>
+  <TipsStar tip = "daily exercise of 20 minutes can improve your sleep!" left = "27%" top = "84%"></TipsStar>
+  <TipsStar tip = "try to have some light exposure for at least 30 minutes a day" left = "15%" top = "94%"></TipsStar>
+  <TipsStar tip = "use relaxing techniques, we can help you find some! scroll down" left = "72%" top = "15%"></TipsStar>
+  <TipsStar tip = "can't fall asleep? try getting out of bed and do something relaxing!" left = "81%" top = "15%"></TipsStar>
+  <TipsStar tip = "try to eat dinner a few hours before bed!" left = "72%" top = "25%"></TipsStar>
+  <TipsStar tip = "need a late snack? try to keep it light!" left = "79%" top = "25%"></TipsStar>
+  <TipsStar tip = "reserve your bed for sleep only" left = "85%" top = "37%"></TipsStar>
+  <TipsStar tip = "keep naps around 20 minutes!" left = "90%" top = "50%"></TipsStar>
+</div>
+
+<div 
+class = "polar-star">
+  <svg viewBox="0 0 100 100" class="polar-svg" xmlns="http://www.w3.org/2000/svg">
+    <polygon points="50,10 60,50 50,90 40,50" />
+    <polygon points="10,50 50,60 90,50 50,40" />
+  </svg>
+  <div class = "polar-tip">follow your sleep cycles!</div>
 </div>
 
 
