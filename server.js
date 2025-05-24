@@ -207,8 +207,17 @@ app.post("/api/logout", (req, res) => {
 });
 
 // Get current user info
-app.get("/api/me", authMiddleware, (req, res) => {
-  res.json({ user: req.user });
+app.get("/api/me", authMiddleware, async (req, res) => {
+  try {
+    const user = await User.findById(req.user.id).select("-password");
+    if (!user) {
+      return res.status(404).json({ error: "User not found" });
+    }
+    res.json({ user });
+  } catch (err) {
+    console.error("Error in /api/me:", err);
+    res.status(500).json({ error: "Failed to retrieve user data" });
+  }
 });
 
 // === SLEEP LOG ROUTES ===
