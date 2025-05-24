@@ -37,7 +37,9 @@ mongoose.connect("mongodb://localhost:27017/sleepTracker", {
 // === SCHEMAS ===
 const userSchema = new mongoose.Schema({
   username: { type: String, unique: true },
-  password: String,
+  password: {type: String, required: true},
+  dob : { type: Date, required: true},
+  age : {type: Number, required: true},
 });
 
 const sleepLogSchema = new mongoose.Schema({
@@ -91,9 +93,9 @@ async function isPasswordBreached(password) {
 const commonPasswords = ["password123","12345678"];
 
 app.post("/api/register", async (req, res) => {
-  const { username, password } = req.body;
+  const { username, password, dob} = req.body;
 
-  if (!username || !password) {
+  if (!username || !password || !dob) {
     return res.status(400).json({ error: "Missing fields" });
   }
 
@@ -126,10 +128,31 @@ app.post("/api/register", async (req, res) => {
   }
 
   try {
+    // Calculate age
+    const birthDate = new Date(dob);
+    const today = new Date();
+    let age = today.getFullYear() - birthDate.getFullYear();
+    const m = today.getMonth() - birthDate.getMonth();
+    if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
+      age--;
+    }
+
     const hashed = await bcrypt.hash(password, 10);
-    const user = new User({ username, password: hashed });
+    const user = new User({ username, password: hashed, dob, age });
     await user.save();
-    res.status(201).json({ message: "User registered" });
+
+    // Create JWT token for the newly registered user
+    const token = jwt.sign({ id: user._id, username }, JWT_SECRET, { expiresIn: "2d" });
+
+    // Set the token cookie to log in the user automatically
+    res.cookie("token", token, {
+      httpOnly: true,
+      sameSite: "Lax",
+      secure: false, // true if using HTTPS in production
+    });
+
+
+    res.status(201).json({ message: "User registered succesfully and automatically logged in" });
   } catch (err) {
     console.error("Registration error:", err);
     res.status(500).json({ error: "Internal server error" });
@@ -152,6 +175,21 @@ app.post("/api/login", loginLimiter, async (req, res) => {
 
   const isMatch = await bcrypt.compare(password, user.password);
   if (!isMatch) return res.status(400).json({ error: "Invalid credentials" });
+
+  // Recalculate age based on current date and user's dob
+  const birthDate = new Date(user.dob);
+  const today = new Date();
+  let age = today.getFullYear() - birthDate.getFullYear();
+  const m = today.getMonth() - birthDate.getMonth();
+  if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
+    age--;
+  }
+
+  // Update age in the database if it changed
+  if (user.age !== age) {
+    user.age = age;
+    await user.save();
+  }
 
   const token = jwt.sign({ id: user._id, username }, JWT_SECRET, { expiresIn: "2d" });
   res.cookie("token", token, {
@@ -184,9 +222,17 @@ app.get("/api/sleepLogs", authMiddleware, async (req, res) => {
 // Get all users - only for development/testing!
 app.get("/api/users", async (req, res) => {
   try {
-    const users = await User.find({}, "username"); // Only select the username field
-    res.json(users);
+    const users = await User.find({}, "-password").lean(); // Exclude password
+    const formattedUsers = users.map(user => ({
+      username: user.username,
+      dob: user.dob instanceof Date
+        ? user.dob.toISOString().split("T")[0]  // "YYYY-MM-DD"
+        : "N/A",
+        age: typeof user.age === "number" ? user.age : "N/A"
+    }));
+    res.json({ users: formattedUsers });
   } catch (err) {
+    console.error("Error fetching users:", err);
     res.status(500).json({ error: "Failed to fetch users" });
   }
 });

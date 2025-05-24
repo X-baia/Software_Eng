@@ -25,7 +25,7 @@ function SleepTracker() {
   const [user, setUser] = useState(null);
   const [authMode, setAuthMode] = useState("login");
   const [showLoginPopup, setShowLoginPopup] = useState(false);
-  const [authFields, setAuthFields] = useState({ username: "", password: "" });
+  const [authFields, setAuthFields] = useState({ username: "", password: "", dob: "" });
 
   useEffect(() => {
     fetch("http://localhost:5001/api/sleepLogs", { credentials: "include" })
@@ -233,8 +233,19 @@ function SleepTracker() {
       setUser(data.user);
       closePopup();
     } else {
-      alert("Failed to authenticate");
+      // Try to extract error message from response
+    let errorMsg = "Failed to authenticate";
+    try {
+      const errorData = await res.json();
+      if (errorData.error) {
+        errorMsg = errorData.error;
+      }
+    } catch (e) {
+      console.error("Failed to parse error response:", e);
     }
+
+    alert(errorMsg);
+  }
   };
 
   const logout = async () => {
@@ -412,6 +423,16 @@ function SleepTracker() {
               >
                 The password must contain at least a number and a special character.
               </p>
+            )}
+
+            {authMode === "register" && (
+            <input
+            type="date"
+            placeholder="Date of Birth"
+            value={authFields.dob || ""}
+            onChange={(e) => setAuthFields({ ...authFields, dob: e.target.value })}
+            style={{ width: "100%", marginBottom: "10px" }}
+            />
             )}
 
             <button
