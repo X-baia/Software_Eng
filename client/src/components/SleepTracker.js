@@ -41,6 +41,12 @@ function SleepTracker() {
       .catch(() => {});
   }, []);
 
+  useEffect(() => {
+  if (user && user.age != null) {
+    setAge(user.age.toString()); // Ensure it's a string if age input is bound to a text/number input
+  }
+}, [user]);
+
   const getSleepRangeByAge = (age) => {
     if (age >= 1 && age <= 2) return [12, 14];
     if (age >= 3 && age <= 5) return [10, 13];
@@ -56,7 +62,6 @@ function SleepTracker() {
     const minCycles = Math.floor((minSleep * 60) / sleepCycle);
     const maxCycles = Math.ceil((maxSleep * 60) / sleepCycle);
     const times = [];
-
     if (mode === "bedtime") {
       const bedtimeDate = new Date(`2024-01-01T${bedtime}:00`);
       bedtimeDate.setMinutes(bedtimeDate.getMinutes() + fallAsleepTime);
@@ -271,10 +276,29 @@ function SleepTracker() {
       <div style={{ position: "absolute", top: 20, right: 30 }}>
         {user ? (
           <div style={{ textAlign: "right", marginBottom: "20px" }}>
-            <span>Welcome, {user.username}</span>
+            <span 
+            style={{
+              color: "#7e22ce",
+              padding: "10px 15px", 
+              fontSize: "18px"}}
+            >
+              Welcome, {user.username}</span>
             <button
               onClick={logout}
-              style={{ marginLeft: "10px", backgroundColor: "#d9534f", color: "white", border: "none", borderRadius: "5px", padding: "5px 10px", cursor: "pointer" }}
+              style={{
+                backgroundColor: "#7e22ce", // Match purple theme
+                color: "white",
+                border: "none",
+                borderRadius: "8px",
+                padding: "10px 15px",
+                fontWeight: "bold",
+                fontSize: "14px",
+                cursor: "pointer",
+                boxShadow: "0 0 10px rgba(192, 132, 252, 0.6)", // Glow effect
+                textTransform: "uppercase",
+              }}
+              onMouseEnter={(e) => (e.currentTarget.style.boxShadow = "0 0 15px rgba(192, 132, 252, 0.8)")}
+              onMouseLeave={(e) => (e.currentTarget.style.boxShadow = "0 0 10px rgba(192, 132, 252, 0.6)")}
             >
               Logout
             </button>
@@ -412,6 +436,32 @@ function SleepTracker() {
               onFocus={(e) => (e.target.style.border = "1px solid #c084fc")}
               onBlur={(e) => (e.target.style.border = "1px solid #ccc")}
             />
+
+            {authMode === "register" && (
+            <input
+            type="date"
+            placeholder="Date of Birth"
+            value={authFields.dob || ""}
+            onChange={(e) => setAuthFields({ ...authFields, dob: e.target.value })}
+            style={{
+                width: "100%",
+                maxWidth: "300px", // Ensure consistent width
+                marginBottom: "10px",
+                padding: "12px",
+                borderRadius: "8px",
+                border: "1px solid #ccc",
+                backgroundColor: "#222",
+                color: "white",
+                outline: "none",
+                fontSize: "16px",
+                textAlign: "center", // Center text inside input
+                transition: "all 0.3s",
+              }}
+              onFocus={(e) => (e.target.style.border = "1px solid #c084fc")}
+              onBlur={(e) => (e.target.style.border = "1px solid #ccc")}
+            />
+            )}
+
             {authMode === "register" && (
               <p
                 style={{
@@ -423,16 +473,6 @@ function SleepTracker() {
               >
                 The password must contain at least a number and a special character.
               </p>
-            )}
-
-            {authMode === "register" && (
-            <input
-            type="date"
-            placeholder="Date of Birth"
-            value={authFields.dob || ""}
-            onChange={(e) => setAuthFields({ ...authFields, dob: e.target.value })}
-            style={{ width: "100%", marginBottom: "10px" }}
-            />
             )}
 
             <button
@@ -511,31 +551,44 @@ function SleepTracker() {
         fontFamily: "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif",
         textTransform: "uppercase"
       }}>
-        Age:
+        Your age:
       </span>
     </label>
-    <input
-      type="number"
-      value={age}
-      onChange={(e) => setAge(e.target.value)}
-      style={{
-        width: "100%",
-        maxWidth: "250px",
-        textAlign: "center",
-        margin: "0 auto",
-        display: "block",
-        padding: "12px",
-        borderRadius: "8px",
-        border: "1px solid #ccc",
-        backgroundColor: "#333",
-        color: "white",
-        outline: "none",
-        fontSize: "18px",
-        transition: "all 0.3s",
-      }}
-      onFocus={(e) => e.target.style.border = "1px solid #c084fc"}
-      onBlur={(e) => e.target.style.border = "1px solid #ccc"}
-    />
+    {!user ? (
+      <input
+        type="number"
+        value={age}
+        onChange={(e) => setAge(e.target.value)}
+        style={{
+          width: "100%",
+          maxWidth: "250px",
+          textAlign: "center",
+          margin: "0 auto",
+          display: "block",
+          padding: "12px",
+          borderRadius: "8px",
+          border: "1px solid #ccc",
+          backgroundColor: "#333",
+          color: "white",
+          outline: "none",
+          fontSize: "18px",
+          transition: "all 0.3s",
+        }}
+        onFocus={(e) => (e.target.style.border = "1px solid #c084fc")}
+        onBlur={(e) => (e.target.style.border = "1px solid #ccc")}
+      />
+    ) : (
+      <p
+        style={{
+          textAlign: "center",
+          fontSize: "18px",
+          fontWeight: "normal",
+          marginTop: "10px",
+        }}
+      >
+        {user.age}
+      </p>
+    )}
   </div>
 
   <div style={{ display: "flex", alignItems: "center", justifyContent: "center", marginBottom: "20px", gap: "15px" }}>
