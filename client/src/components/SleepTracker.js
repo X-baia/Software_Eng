@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from "react";
 import {
-  LineChart,
-  Line,
+  ResponsiveContainer,
+  BarChart,
+  Bar,
   XAxis,
   YAxis,
   Tooltip,
-  ResponsiveContainer,
+  CartesianGrid,
 } from "recharts";
 
 import TipsStar from "../TipsStar";
@@ -990,18 +991,58 @@ function SleepTracker() {
 
 {user && sleepLog.length > 0 && (
   <div style={{ marginTop: "50px" }}>
-    <h2 style={{ textAlign: "center" }}>Your Sleep Log</h2>
+    <h2 style={{ textAlign: "center", color: "white" }}>Your Sleep Log</h2>
     <ResponsiveContainer width="100%" height={300}>
-      <LineChart data={sleepLog}>
-        <XAxis dataKey="date" />
-        <YAxis />
-        <Tooltip />
-        <Line type="monotone" dataKey="hours" stroke="#003366" />
-      </LineChart>
+      <BarChart data={sleepLog}>
+        <CartesianGrid stroke="#444" strokeDasharray="4 4" />
+        <XAxis
+          dataKey="date"
+          stroke="#c084fc"
+          tick={{ fill: "#fff" }}
+          axisLine={{ stroke: "#c084fc", strokeWidth: 2 }}
+          tickLine={{ stroke: "#c084fc", strokeWidth: 2 }}
+          label={{ value: "Date", position: "insideBottom", offset: -5, fill: "#fff" }}
+        />
+        <YAxis
+          stroke="#c084fc"
+          tick={{ fill: "#fff" }}
+          axisLine={{ stroke: "#c084fc", strokeWidth: 2 }}
+          tickLine={{ stroke: "#c084fc", strokeWidth: 2 }}
+          label={{value: "Hours of Sleep",angle: -90,position: "insideLeft",offset: 10,fill: "#fff"}}
+        />
+        <Tooltip
+          cursor={false} // Prevents full graph highlight
+          contentStyle={{
+          backgroundColor: "#222", // dark tooltip
+          borderColor: "#c084fc",
+          color: "#fff"
+          }}
+          labelStyle={{ color: "#c084fc" }}
+          itemStyle={{ color: "#fff" }}
+        />
+        <Bar dataKey="hours" fill="#c084fc" barSize={40} isAnimationActive={false} activeBar={{fill: "#a855f7"}} />
+      </BarChart>
     </ResponsiveContainer>
     <div style={{ textAlign: "center" }}>
-      <button onClick={clearSleepData} style={{ marginTop: "20px", backgroundColor: "#d9534f", color: "white", padding: "10px 20px", border: "none", borderRadius: "5px" }}>
-        Clear Log
+      <button
+        onClick={clearSleepData}
+        style={{
+          backgroundColor: "#7e22ce", // Match purple theme
+          color: "white",
+          border: "none",
+          borderRadius: "8px",
+          marginTop: "20px",
+          padding: "10px 15px",
+          fontWeight: "bold",
+          fontSize: "14px",
+          cursor: "pointer",
+          boxShadow: "0 0 10px rgba(192, 132, 252, 0.6)", // Glow effect
+          textTransform: "uppercase",
+        }}
+        onMouseEnter={(e) => (e.currentTarget.style.boxShadow = "0 0 15px rgba(192, 132, 252, 0.8)")}
+        onMouseLeave={(e) => (e.currentTarget.style.boxShadow = "0 0 10px rgba(192, 132, 252, 0.6)")}
+      >
+        Clear all Logs
       </button>
     </div>
   </div>
