@@ -26,6 +26,9 @@ function SleepTracker() {
   const [authMode, setAuthMode] = useState("login");
   const [showLoginPopup, setShowLoginPopup] = useState(false);
   const [authFields, setAuthFields] = useState({ username: "", password: "", dob: "" });
+  const [selectedLog, setSelectedLog] = useState(null);
+  const [editedHours, setEditedHours] = useState("");
+
 
   useEffect(() => {
     fetch("http://localhost:5001/api/sleepLogs", { credentials: "include" })
@@ -221,6 +224,59 @@ function SleepTracker() {
       setSleepLog([]);
       alert("Sleep log data cleared!");
     }
+  };
+
+  const refreshSleepLogs = () => {
+  fetch("http://localhost:5001/api/sleepLogs", { credentials: "include" })
+    .then((res) => (res.status === 401 ? [] : res.json()))
+    .then(setSleepLog)
+    .catch(() => {});
+};
+
+  const handleBarClick = (data) => {
+  setSelectedLog(data);
+  setEditedHours(data.hours);
+  };
+
+  const handleSave = async () => {
+    if (!selectedLog || !editedHours) return;
+
+    try {
+      await fetch(`http://localhost:5001/api/sleepLogs/${selectedLog._id}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+        body: JSON.stringify({ hours: Number(editedHours) }),
+      });
+      setSelectedLog(null);
+      refreshSleepLogs();
+    } catch (err) {
+      alert("Failed to update log.");
+    }
+  };
+
+  const handleDelete = async () => {
+  if (!selectedLog) return;
+    console.log("Attempting to delete log ID:", selectedLog._id);
+  try {
+    const res = await fetch(`http://localhost:5001/api/sleepLogs/${selectedLog._id}`, {
+      method: "DELETE",
+      credentials: "include",
+    });
+
+    const result = await res.json();
+    console.log("Delete response:", res.status, result);
+
+    if (res.ok) {
+      setSelectedLog(null);
+      refreshSleepLogs();
+    } else {
+      alert(result.error || "Failed to delete log.");
+    }
+  } catch (err) {
+    console.error("Delete error:", err);
+    alert("Failed to delete log.");
+  }
   };
 
   const handleAuth = async () => {
@@ -1020,7 +1076,7 @@ function SleepTracker() {
           labelStyle={{ color: "#c084fc" }}
           itemStyle={{ color: "#fff" }}
         />
-        <Bar dataKey="hours" fill="#c084fc" barSize={40} isAnimationActive={false} activeBar={{fill: "#a855f7"}} />
+        <Bar dataKey="hours" fill="#c084fc" barSize={40} isAnimationActive={false} activeBar={{fill: "#a855f7"}} onClick={handleBarClick} />
       </BarChart>
     </ResponsiveContainer>
     <div style={{ textAlign: "center" }}>
@@ -1045,6 +1101,101 @@ function SleepTracker() {
         Clear all Logs
       </button>
     </div>
+
+    {selectedLog && (
+      <div style={{
+        position: "fixed", top: 0, left: 0, right: 0, bottom: 0,
+        backgroundColor: "rgba(0, 0, 0, 0.85)",
+        display: "flex", alignItems: "center", justifyContent: "center",
+        zIndex: 1000,
+        }}>
+        <div style={{
+          backgroundColor: "#1e1e1e",
+          padding: "30px",
+          borderRadius: "10px",
+          width: "90%",
+          maxWidth: "400px",
+          color: "white",
+          position: "relative",
+          boxShadow: "0 0 20px #c084fc",
+          }}>
+          <button
+              onClick={() => setSelectedLog(null)}
+              style={{
+                position: "absolute",
+                top: "10px",
+                right: "15px",
+                background: "transparent",
+                border: "none",
+                fontSize: "30px",
+                color: "#c084fc", // Purple close button
+                cursor: "pointer",
+                transition: "transform 0.2s ease", // Button click animation
+              }}
+              onMouseDown={(e) => (e.currentTarget.style.transform = "scale(0.9)")}
+              onMouseUp={(e) => (e.currentTarget.style.transform = "scale(1)")}
+            >
+              &times;
+            </button>
+          <h3 style={{ color: "#fff" }}>Edit Sleep Log</h3>
+          <p style={{ color: "#ccc" }}><strong>Date:</strong> {selectedLog.date}</p>
+          <p style={{ color: "#ccc" }}><strong>Time:</strong> {selectedLog.selectedTime}</p>
+          <p style={{ color: "#ccc" }}><strong>Mode:</strong> {selectedLog.mode}</p>
+
+          <label style={{ color: "#fff" }}>
+            Hours Slept:
+            <input
+              type="number"
+              value={editedHours}
+              onChange={(e) => setEditedHours(e.target.value)}
+              style={{
+                marginTop: "10px",
+                width: "100%",
+                padding: "10px",
+                borderRadius: "5px",
+                border: "1px solid #ccc",
+                backgroundColor: "#333",
+                color: "#fff"
+              }}
+            />
+          </label>
+
+          <div style={{ marginTop: "20px" }}>
+            <button style={{
+              backgroundColor: "#7e22ce", // Match purple theme
+              color: "white",
+              border: "none",
+              borderRadius: "8px",
+              padding: "10px 20px",
+              fontWeight: "bold",
+              fontSize: "14px",
+              cursor: "pointer",
+              boxShadow: "0 0 10px rgba(192, 132, 252, 0.6)", // Glow effect
+              textTransform: "uppercase",
+              }} 
+            onClick={handleSave}>
+              Save
+            </button>
+            <button style={{
+              backgroundColor: "#7e22ce", // Match purple theme
+              color: "white",
+              border: "none",
+              borderRadius: "8px",
+              marginLeft: "20px",
+              padding: "10px 20px",
+              fontWeight: "bold",
+              fontSize: "14px",
+              cursor: "pointer",
+              boxShadow: "0 0 10px rgba(192, 132, 252, 0.6)", // Glow effect
+              textTransform: "uppercase",
+              }} 
+            onClick={handleDelete}>
+              Delete
+            </button>
+          </div>
+        </div>
+      </div>
+    )}
   </div>
 )}
 
