@@ -259,6 +259,47 @@ app.delete("/api/sleepLogs", authMiddleware, async (req, res) => {
   res.json({ message: "Sleep logs cleared" });
 });
 
+// Delete a specific sleep log by ID
+app.delete("/api/sleepLogs/:id", authMiddleware, async (req, res) => {
+  const logId = req.params.id;
+
+  try {
+    const deleted = await SleepLog.findOneAndDelete({ _id: logId, userId: req.user.id });
+
+    if (!deleted) {
+      return res.status(404).json({ error: "Sleep log not found or not authorized" });
+    }
+
+    res.json({ message: "Sleep log deleted" });
+  } catch (err) {
+    console.error("Error deleting sleep log:", err);
+    res.status(500).json({ error: "Failed to delete sleep log" });
+  }
+});
+
+//update a sleeplog
+app.put("/api/sleepLogs/:id", authMiddleware, async (req, res) => {
+  const { id } = req.params;
+  const { hours, date, selectedTime, mode } = req.body;
+
+  try {
+    const updatedLog = await SleepLog.findOneAndUpdate(
+      { _id: id, userId: req.user.id },
+      { hours, date, selectedTime, mode },
+      { new: true }
+    );
+
+    if (!updatedLog) {
+      return res.status(404).json({ error: "Log not found" });
+    }
+
+    res.json(updatedLog);
+  } catch (err) {
+    console.error("Update error:", err);
+    res.status(500).json({ error: "Failed to update sleep log" });
+  }
+});
+
 // === SERVER START ===
 app.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`);
