@@ -1200,6 +1200,7 @@ function SleepTracker() {
 )}
 
 
+<div className="layout-wrapper">
 <div>
   <TipsStar tip = "limit caffeine in the afternoon!" left = "6%" top = "15%"></TipsStar>
   <TipsStar tip = "try to not use your devices 1 hour before bed" left = "14%" top = "30%"></TipsStar>
@@ -1216,6 +1217,7 @@ function SleepTracker() {
   <TipsStar tip = "keep naps around 20 minutes!" left = "90%" top = "50%"></TipsStar>
 </div>
 
+
 <div 
 class = "polar-star">
   <svg viewBox="0 0 100 100" class="polar-svg" xmlns="http://www.w3.org/2000/svg">
@@ -1225,6 +1227,13 @@ class = "polar-star">
   <div class = "polar-tip">follow your sleep cycles!</div>
 </div>
 
+<h2 id = "tips-section" class = "title">
+  Read below for theory behind a good sleep schedule!
+</h2>
+
+</div>
+
+
 
 <div  class = "text-tips">
   Want some tips on how you can sleep better? Touch the stars!
@@ -1233,10 +1242,6 @@ class = "polar-star">
 <div class = "text-tips2">
  Or click this icon <a href="#tips-section"><span>ℹ️</span></a>!
 </div>
-
-<h2 id = "tips-section" class = "title">
-  Read below for theory behind a good sleep schedule!
-</h2>
 
 
 <div className="rhythm-box">    
