@@ -1224,7 +1224,7 @@ class = "polar-star">
     <polygon points="50,10 60,50 50,90 40,50" />
     <polygon points="10,50 50,60 90,50 50,40" />
   </svg>
-  <div class = "polar-tip">follow your sleep cycles!</div>
+  <div class = "polar-tip">follow your sleep cycles! </div>
 </div>
 
 <h2 id = "tips-section" class = "title">
@@ -1236,7 +1236,7 @@ class = "polar-star">
 
 
 <div  class = "text-tips">
-  Want some tips on how you can sleep better? Touch the stars!
+  Want to sleep better? Touch the stars!
 </div>
 
 <div class = "text-tips2">
@@ -1271,80 +1271,104 @@ class = "polar-star">
 
 
 <div className="tips-wrapper">
-  <div className="tip-box">
+  <div className="tips-scroller">
+    <div className="tip-box2">
     <h3>☕️ Caffeine!</h3>
-    <p>Try to avoid caffeine and others like alchool or nicotine before going to bed. It is proved that avoiding these substances 
-      may help with a good night sleep.
+    <p>Try to avoid caffeine and other substances like alchol or nicotine before going to bed.  Using caffeine in the afternoon can be tempting to resist the sleepiness of the afternoon, but it's not reccomended in the long term.
+      Alchol on the other hand can affect the brain in a way that can lower the sleep quality.  Same goes with nicotine as it's a stimulant! It is proved that avoiding these substances 
+      may help with a good night sleep. 
     </p>
   </div>
 
-  <div className="tip-box">
+  <div className="tip-box2">
     <h3>📱 Devices</h3>
     <p> Blue light can affect your circadian rhythm, this can worsen the quality of your sleep.
-      It's advisable to avoid using devices 1 hour before bed, but even 20 minutes before can help! Read more about circadian rhythm below.
+      It's advisable to avoid using devices 1 hour before bed, but even 20 minutes before can help! The blue light can affect the production of melatonin during the evening
+      and using eletronical devices can keep your brain from winding down which can reflect on your ability to fall asleep.
     </p>
   </div>
 
-  <div className = "tip-box">
+  <div className="tip-box2">
+    <h3>💡Block out light</h3>
+    <p> During the night, block out sources of light. This can affect your body in the production of melatonin and make it difficult
+      for you to fall asleep. The importance of light is connected to your circadian rhythm, in fact as sun sets the brain begins to produce melatonin, an hormone inducing sleepiness.
+      Also your body temperature starts to drop which is typical behavior of your body when it's ready to fall asleep.
+    </p>
+  </div>
+
+   <div className="tip-box3">
+  <h3>✨ Sleep cycles</h3>
+  <p>
+    Follow your sleep cycle! Sleep cycles are made of 1.5 hours each, using our site you can find the best time to go to bed or the best time to wake up at!
+    One sleep cycles is divided between 2 different kind of stages, the Non-REM sleep and the REM sleep. Waking up between stages can make you feel tired even if you've just woken up.
+    Studies suggest that it's better to wake up in between cycles. Our site is here to help you accomplish this goal!
+  </p>
+</div>
+
+
+   <div className = "tip-box2">
+    <h3>🧘 Relaxing techniques</h3>
+    <p> Simple relaxing techniques can be reading a book or listening to soothing music. You can also try some breathing exercises, for example:
+      place one of your hands on your stomach and the other on your chest, inhale slowly directing your breath to the belly, concentrate on how your hands move, exhale slowly and feel how the hand 
+      on your stomach gradually fall. You can also try some meditation techniques, we suggest the 
+      <span className="tool-tip"><strong> body scan meditation</strong>
+        <span className="tooltip-text">
+          <ol>
+            <li> Lie in bed with your hands at your side.</li>
+            <li>Spend a few seconds concentrating on your breathing</li>
+            <li>Concentrate on the sensations you feel in your feet</li>
+            <li> Breathe deeply and imagine the breath travelling to your feet. Exhale and let your feet dissolve from your awarness</li>
+            <li>Move your attention progressively upward until reaching your head.</li>
+            <li> Finish by becoming aware of your whole body and breath deeply</li>
+          </ol>
+        </span>
+      </span>.
+    </p>
+  </div>
+
+  <div className = "tip-box2">
     <h3>⏰ Wake up</h3>
-    <p>Try to wake up at the same time everyday. In this way your body will be able to get accustomed
-      to an healthy sleep routine.
+    <p>Try to wake up at the same time everyday, even in the weekends. In this way tou can help your body get accustomed
+      to an healthy sleep routine, which is difficult if you don't follow a similar routine every day.
     </p>
   </div>
 
-  <div className="tip-box">
-    <h3>🛁 Warm bath</h3>
-    <p>Take a warm shower or a warm bath an hour before bed. This will help with the natural temperature
-      regulation process, improving sleep as a result. Read more about circadian rhythm below!
-    </p>
-  </div>
-
-  <div className="tip-box">
+  <div className="tip-box2">
     <h3>🍽️ Dinner</h3>
-    <p>Have dinner a few hours before your bedtime. Going to bed with an heavy stomach can affect the quality of your sleep and the amount of time
-      you will actually take to fall asleep. Also not eating is not a great option as you may wake up during the night hungry.
+    <p>Have dinner a few hours before your bedtime, allow your body to digest. Going to bed with an heavy stomach can affect the quality of your sleep and the amount of time
+      you will actually take to fall asleep. Also not eating is not an option as you may wake up in the middle of the night hungry which will disrupt your sleep.
     </p>
   </div>
 
-  <div className="tip-box">
+ 
+
+  <div className="tip-box2">
     <h3>🏃‍♂️‍➡️ Daily exercise</h3>
-    <p>A daily walk of 20 minutes is enough to already improve your sleep schedule. Experts advise to avoid heavy exercise
+    <p>A daily walk of 20 minutes is enough to already improve your sleep schedule. Other than improving your health, exercising can also improve your mental health. It's always advisable! Experts advise to avoid heavy exercise
       close to bedtime, instead try some relaxing activities or light exercises like yoga!
     </p>
   </div>
 
-  <div className = "tip-box"> 
+  <div className="tip-box2">
+    <h3>🛁 Warm bath</h3>
+    <p>Take a warm shower or a warm bath an hour before bed. This will help with the natural temperature
+      regulation process, improving sleep as a result.
+    </p>
+  </div>
+
+    
+
+  <div className = "tip-box2"> 
      <h3>😴 Naps</h3>
     <p> Keep naps around 20 minutes and take them early in the afternoon. The best time to take a nap is shortly after lunch. If you take it too late in the day, or take one too long,
       you probably will have more troubles falling asleep in the night. 
     </p>
   </div>
 
-  <div className = "tip-box">
+  <div className = "tip-box2">
     <h3>🛏️ Get out of bed!</h3>
     <p>Can't fall asleep? Try to get out of bed and do something relaxing instead. Read a few pages of a book or try some relaxing techniques.
-      It's better to not associate frustation with the environment of the bed as it can affect your next sleep.
-    </p>
-  </div>
-
-</div>
-
-<div className="tips-wrapper2">
-  <div className = "tip-box2">
-    <h3>🧘 Relaxing techniques</h3>
-    <p> Simple relaxing techniques can be reading a book or listening to soothing music. You can also try some breathing exercises, for example:
-      place one of your hands on your stomach and the other on your chest, inhale slowly directing your breath to the belly, concentrate on how your hands move, exhale slowly and feel how the hand 
-      on your stomach gradually fall. You can also try some meditation techniques, we suggest the 
-      <span className="tool-tip"><strong> body scan meditation</strong>
-        <span className="tooltip-text" style={{whiteSpace: 'pre-line' }}>
-          1. Lie in bed with your hands at your side.
-          2. Spend a few seconds concentrating on your breathing
-          3. Concentrate on the sensations you feel in your feet
-          4. Breathe deeply and imagine the breath travelling to your feet. Exhale and let your feet dissolve from your awarness
-          5. Move your attention progressively upward until reaching your head.
-          6. Finish by becoming aware of your whole body and breath deeply
-        </span>
-      </span>.
+      It's better to not associate frustation with the environment of the bed as it can affect your next sleep. Also in the mornings try to not stay in bed too long even if tempting.
     </p>
   </div>
 
@@ -1356,30 +1380,9 @@ class = "polar-star">
     </p>
   </div>
 
-  <div className="tip-box2">
-    <h3>💡Block out light</h3>
-    <p> During the night, block out sources of light. This can affect your body in the production of melatonin and make it difficult
-      for you to fall asleep. The importance of light is connected to your circadian rhythm, in fact as sun sets the brain begins to produce melatonin, an hormone inducing sleepiness.
-      Also your body temperature starts to drop, typical behavior of your body when it's ready to fall asleep.
-    </p>
   </div>
+  
 </div>
-
-<div className="tip-box3">
-  <h3>✨ Sleep cycles</h3>
-  <p>
-    Follow your sleep cycle! Sleep cycles are made of 1.5 hours each, using our site you can find the best time to go to bed or the best time to wake up at!
-    One sleep cycles is divided between 2 different kind of stages, the Non-REM sleep and the REM sleep. Waking up between stages can make you feel tired even if you've just woken up.
-    Studies suggest that it's better to wake up in between cycles. Our site is here to help you accomplish this goal!
-  </p>
-</div>
-
-
-
-
-
-
-
 </div>
 );
 }
