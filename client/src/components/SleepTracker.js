@@ -10,6 +10,7 @@ import {
 } from "recharts";
 
 import TipsStar from "../TipsStar";
+import '../Popup.css'
 import '../App.css';
 
 function SleepTracker() {
@@ -96,25 +97,10 @@ function SleepTracker() {
 
   const confirmSelection = async () => {
     if (!selectedRecommendation) {
-      // Show a styled popup if no time is selected
+      // Show a styled popup if no time is selected, css in in Popup.css
       const popup = document.createElement("div");
       popup.innerText = "Please select a time.";
-      Object.assign(popup.style, {
-        position: "fixed",
-        top: "50%",
-        left: "50%",
-        transform: "translate(-50%, -50%)",
-        backgroundColor: "#333", // Match app's dark theme
-        color: "white",
-        padding: "20px 30px",
-        borderRadius: "10px",
-        boxShadow: "0 0 20px rgba(192, 132, 252, 0.6)", // Purple glow
-        fontFamily: "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif",
-        fontSize: "16px",
-        textAlign: "center",
-        zIndex: 2000,
-        animation: "fadeIn 0.3s ease",
-      });
+      popup.classList.add('popup')
 
       document.body.appendChild(popup);
 
@@ -130,38 +116,23 @@ function SleepTracker() {
     if (!user) {
       // Show a styled popup if the user is not logged in
       const popup = document.createElement("div");
-      popup.innerHTML = `
-        <p style="margin: 0; font-size: 16px; font-weight: bold;">You must be logged in to log sleep data.</p>
-        <button style="
-          margin-top: 15px;
-          padding: 10px 20px;
-          background-color: #7e22ce;
-          color: white;
-          border: none;
-          border-radius: 8px;
-          font-weight: bold;
-          font-size: 14px;
-          cursor: pointer;
-          box-shadow: 0 0 10px rgba(192, 132, 252, 0.6);
-          text-transform: uppercase;
-          transition: transform 0.2s ease;
-        " onmouseover="this.style.boxShadow='0 0 15px rgba(192, 132, 252, 0.8)'" onmouseout="this.style.boxShadow='0 0 10px rgba(192, 132, 252, 0.6)'" onclick="document.body.removeChild(this.parentElement)">Close</button>
-      `;
-      Object.assign(popup.style, {
-        position: "fixed",
-        top: "50%",
-        left: "50%",
-        transform: "translate(-50%, -50%)",
-        backgroundColor: "#333", // Match app's dark theme
-        color: "white",
-        padding: "20px 30px",
-        borderRadius: "10px",
-        boxShadow: "0 0 20px rgba(192, 132, 252, 0.6)", // Purple glow
-        fontFamily: "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif",
-        textAlign: "center",
-        zIndex: 2000,
-        animation: "fadeIn 0.3s ease",
-      });
+      popup.className = "popup-not-logged";
+
+      const message = document.createElement('p');
+      message.className = 'popup-not-logged-message';
+      message.textContent = 'You must be logged in to log sleep data.';
+
+      const button = document.createElement('button');
+      button.className = 'popup-not-logged-button';
+      button.textContent = 'Close';
+      button.onclick = () => document.body.removeChild(popup);
+
+      popup.appendChild(message);
+      popup.appendChild(button);
+      document.body.appendChild(popup);
+
+      popup.classList.add('popup2')
+      
 
       document.body.appendChild(popup);
 
@@ -527,7 +498,7 @@ function SleepTracker() {
                   marginBottom: "15px",
                 }}
               >
-                The password must contain at least a number and a special character.
+                The password must be 8 character long and contain at least a number.
               </p>
             )}
 
