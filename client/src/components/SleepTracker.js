@@ -10,8 +10,9 @@ import {
 } from "recharts";
 
 import TipsStar from "../TipsStar";
-import '../Popup.css'
+import '../Popup.css';
 import '../App.css';
+import '../SleepTracker.css';
 
 function SleepTracker() {
   const [mode, setMode] = useState("bedtime");
@@ -114,7 +115,7 @@ function SleepTracker() {
     }
 
     if (!user) {
-      // Show a styled popup if the user is not logged in
+      // Show a popup if the user is not logged in
       const popup = document.createElement("div");
       popup.className = "popup-not-logged";
 
@@ -554,65 +555,27 @@ function SleepTracker() {
   DeepSleep
 </h1>
 
-<div style={{
-  maxWidth: "500px",
-  margin: "0 auto",
-  backgroundColor: "#696969", // light gray
-  padding: "30px",
-  borderRadius: "10px",
-  boxShadow: "0 0 20px #c084fc", // purple glow
-  fontFamily: "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif",
-  color: "white"
-}}>
+<div class = "block">
   <div style={{
     marginBottom: "25px",
     borderBottom: "1px solid black",
     paddingBottom: "20px"
   }}>
     <label>
-      <span style={{
-        display: "block",
-        textAlign: "center",
-        marginBottom: "10px",
-        fontWeight: "bold",
-        fontFamily: "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif",
-        textTransform: "uppercase"
-      }}>
+      <span class = "age-block">
         Your age:
       </span>
     </label>
     {!user ? (
-      <input
+      <input className="input-age"
         type="number"
         value={age}
         onChange={(e) => setAge(e.target.value)}
-        style={{
-          width: "100%",
-          maxWidth: "250px",
-          textAlign: "center",
-          margin: "0 auto",
-          display: "block",
-          padding: "12px",
-          borderRadius: "8px",
-          border: "1px solid #ccc",
-          backgroundColor: "#333",
-          color: "white",
-          outline: "none",
-          fontSize: "18px",
-          transition: "all 0.3s",
-        }}
         onFocus={(e) => (e.target.style.border = "1px solid #c084fc")}
         onBlur={(e) => (e.target.style.border = "1px solid #ccc")}
       />
     ) : (
-      <p
-        style={{
-          textAlign: "center",
-          fontSize: "18px",
-          fontWeight: "normal",
-          marginTop: "10px",
-        }}
-      >
+      <p class= "age">
         {user.age}
       </p>
     )}
@@ -630,28 +593,7 @@ function SleepTracker() {
       >
         Alarm Mode
       </span>
-      <div style={{
-        visibility: "hidden",
-        opacity: 0,
-        transform: "translateY(-50%) scale(0.85)",
-        transition: "opacity 0.4s ease, transform 0.4s ease",
-        borderRadius: "12px",
-        boxShadow: "0 8px 20px rgba(192, 132, 252, 0.3)",
-        backgroundColor: "rgba(99, 33, 99, 0.7)",
-        padding: "10px 15px",
-        fontSize: "13px",
-        fontWeight: "700",
-        textTransform: "uppercase",
-        color: "#eee",
-        textAlign: "center",
-        position: "absolute",
-        zIndex: 10,
-        width: "220px",
-        top: "50%",
-        left: "-260px",
-        marginLeft: 0,
-        userSelect: "none"
-      }}>
+      <div className="alarm-mode">
         Calculates when to go to bed for a given alarm time.
       </div>
     </div>
@@ -690,28 +632,7 @@ function SleepTracker() {
       >
         Bedtime Mode
       </span>
-      <div style={{
-        visibility: "hidden",
-        opacity: 0,
-        transform: "translateY(-50%) scale(0.85)",
-        transition: "opacity 0.4s ease, transform 0.4s ease",
-        borderRadius: "12px",
-        boxShadow: "0 8px 20px rgba(192, 132, 252, 0.3)",
-        backgroundColor: "rgba(99, 33, 99, 0.7)",
-        padding: "10px 15px",
-        fontSize: "13px",
-        fontWeight: "700",
-        textTransform: "uppercase",
-        color: "#eee",
-        textAlign: "center",
-        position: "absolute",
-        zIndex: 10,
-        width: "220px",
-        top: "50%",
-        left: "calc(100% + 20px)",
-        marginLeft: 0,
-        userSelect: "none"
-      }}>
+      <div className="bedtime-mode">
         Calculates the best wake-up time based on your bedtime.
       </div>
     </div>
@@ -756,23 +677,7 @@ function SleepTracker() {
         type="time"
         value={bedtime}
         onChange={(e) => setBedtime(e.target.value)}
-        style={{
-          textAlign: "center",
-          width: "100%",
-          maxWidth: "250px",
-          margin: "0 auto",
-          display: "block",
-          padding: "12px",
-          borderRadius: "8px",
-          border: "1px solid #ccc",
-          backgroundColor: "#333",
-          color: "white",
-          outline: "none",
-          fontSize: "18px",
-          transition: "all 0.3s",
-        }}
-        onFocus={(e) => e.target.style.border = "1px solid #c084fc"}
-        onBlur={(e) => e.target.style.border = "1px solid #ccc"}
+        className="input-bedtime"
       />
 <button
   onClick={() => {
@@ -781,28 +686,7 @@ function SleepTracker() {
     const minutes = now.getMinutes().toString().padStart(2, '0');
     setBedtime(`${hours}:${minutes}`);
   }}
-  style={{
-    width: "100%",
-    maxWidth: "250px",
-    margin: "10px auto 0 auto",
-    display: "block",
-    backgroundColor: "#7e22ce", // Viola scuro come il bottone "GET RECOMMENDATIONS"
-    color: "white",
-    border: "none",
-    borderRadius: "8px",
-    padding: "10px",
-    fontWeight: "bold",
-    fontSize: "14px",
-    cursor: "pointer",
-    transition: "all 0.3s ease",
-    boxShadow: "0 0 8px rgba(192, 132, 252, 0.6)", // Glow viola chiaro (#c084fc)
-    textTransform: "uppercase",
-    letterSpacing: "0.5px"
-  }}
-  onMouseEnter={(e) => e.currentTarget.style.boxShadow = "0 0 12px rgba(192, 132, 252, 0.8)"}
-  onMouseLeave={(e) => e.currentTarget.style.boxShadow = "0 0 8px rgba(192, 132, 252, 0.6)"}
-  onMouseDown={(e) => (e.currentTarget.style.transform = "scale(0.95)")}
-  onMouseUp={(e) => (e.currentTarget.style.transform = "scale(1)")}
+  className="button-bednow"
 >
   GO TO BED NOW
 </button>
@@ -847,23 +731,7 @@ function SleepTracker() {
         type="time"
         value={alarmTime}
         onChange={(e) => setAlarmTime(e.target.value)}
-        style={{
-          width: "100%",
-          maxWidth: "250px",
-          textAlign: "center",
-          margin: "0 auto",
-          display: "block",
-          padding: "12px",
-          borderRadius: "8px",
-          border: "1px solid #ccc",
-          backgroundColor: "#333",
-          color: "white",
-          outline: "none",
-          fontSize: "18px",
-          transition: "all 0.3s",
-        }}
-        onFocus={(e) => e.target.style.border = "1px solid #c084fc"}
-        onBlur={(e) => e.target.style.border = "1px solid #ccc"}
+        className="input-alarmtime"
       />
     </div>
   </div>
@@ -889,44 +757,13 @@ function SleepTracker() {
       type="number"
       value={fallAsleepTime}
       onChange={(e) => setFallAsleepTime(Number(e.target.value))}
-      style={{
-        width: "100%",
-        textAlign: "center", 
-        maxWidth: "250px",
-        margin: "0 auto",
-        display: "block",
-        padding: "12px",
-        borderRadius: "8px",
-        border: "1px solid #ccc",
-        backgroundColor: "#333",
-        color: "white",
-        outline: "none",
-        fontSize: "18px",
-        transition: "all 0.3s",
-      }}
-      onFocus={(e) => e.target.style.border = "1px solid #c084fc"}
-      onBlur={(e) => e.target.style.border = "1px solid #ccc"}
+      className="input-fallasleep"
     />
   </div>
 
   <button
     onClick={calculateTimes}
-    style={{
-      width: "100%",
-      marginTop: "10px",
-      backgroundColor: "#7e22ce",
-      color: "white",
-      border: "none",
-      borderRadius: "8px",
-      padding: "12px",
-      fontWeight: "bold",
-      fontSize: "16px",
-      cursor: "pointer",
-      boxShadow: "0 0 10px #7e22ce",
-      transition: "background-color 0.3s ease",
-    }}
-    onMouseDown={(e) => (e.currentTarget.style.transform = "scale(0.95)")}
-    onMouseUp={(e) => (e.currentTarget.style.transform = "scale(1)")}
+    className="button-get-reccomandations"
   >
     GET RECOMMENDATIONS
   </button>
@@ -993,22 +830,7 @@ function SleepTracker() {
       </ul>
       <button
         onClick={confirmSelection}
-        style={{
-          marginTop: "10px",
-          width: "100%",
-          backgroundColor: "#111",
-          color: "white",
-          border: "none",
-          borderRadius: "8px",
-          padding: "12px",
-          fontWeight: "bold",
-          fontSize: "16px",
-          cursor: "pointer",
-          boxShadow: "0 0 10px #222",
-          transition: "background-color 0.3s ease",
-        }}
-        onMouseDown={(e) => (e.currentTarget.style.transform = "scale(0.95)")}
-        onMouseUp={(e) => (e.currentTarget.style.transform = "scale(1)")}
+       className="button-confirm"
       >
         CONFIRM SELECTION
       </button>
@@ -1053,126 +875,18 @@ function SleepTracker() {
     <div style={{ textAlign: "center" }}>
       <button
         onClick={clearSleepData}
-        style={{
-          backgroundColor: "#7e22ce", // Match purple theme
-          color: "white",
-          border: "none",
-          borderRadius: "8px",
-          marginTop: "20px",
-          padding: "10px 15px",
-          fontWeight: "bold",
-          fontSize: "14px",
-          cursor: "pointer",
-          boxShadow: "0 0 10px rgba(192, 132, 252, 0.6)", // Glow effect
-          textTransform: "uppercase",
-        }}
-        onMouseEnter={(e) => (e.currentTarget.style.boxShadow = "0 0 15px rgba(192, 132, 252, 0.8)")}
-        onMouseLeave={(e) => (e.currentTarget.style.boxShadow = "0 0 10px rgba(192, 132, 252, 0.6)")}
+        className="button-clear-sleep-data"
       >
         Clear all Logs
       </button>
     </div>
-
-    {selectedLog && (
-      <div style={{
-        position: "fixed", top: 0, left: 0, right: 0, bottom: 0,
-        backgroundColor: "rgba(0, 0, 0, 0.85)",
-        display: "flex", alignItems: "center", justifyContent: "center",
-        zIndex: 1000,
-        }}>
-        <div style={{
-          backgroundColor: "#1e1e1e",
-          padding: "30px",
-          borderRadius: "10px",
-          width: "90%",
-          maxWidth: "400px",
-          color: "white",
-          position: "relative",
-          boxShadow: "0 0 20px #c084fc",
-          }}>
-          <button
-              onClick={() => setSelectedLog(null)}
-              style={{
-                position: "absolute",
-                top: "10px",
-                right: "15px",
-                background: "transparent",
-                border: "none",
-                fontSize: "30px",
-                color: "#c084fc", // Purple close button
-                cursor: "pointer",
-                transition: "transform 0.2s ease", // Button click animation
-              }}
-              onMouseDown={(e) => (e.currentTarget.style.transform = "scale(0.9)")}
-              onMouseUp={(e) => (e.currentTarget.style.transform = "scale(1)")}
-            >
-              &times;
-            </button>
-          <h3 style={{ color: "#fff" }}>Edit Sleep Log</h3>
-          <p style={{ color: "#ccc" }}><strong>Date:</strong> {selectedLog.date}</p>
-          <p style={{ color: "#ccc" }}><strong>Time:</strong> {selectedLog.selectedTime}</p>
-          <p style={{ color: "#ccc" }}><strong>Mode:</strong> {selectedLog.mode}</p>
-
-          <label style={{ color: "#fff" }}>
-            Hours Slept:
-            <input
-              type="number"
-              value={editedHours}
-              onChange={(e) => setEditedHours(e.target.value)}
-              style={{
-                marginTop: "10px",
-                width: "100%",
-                padding: "10px",
-                borderRadius: "5px",
-                border: "1px solid #ccc",
-                backgroundColor: "#333",
-                color: "#fff"
-              }}
-            />
-          </label>
-
-          <div style={{ marginTop: "20px" }}>
-            <button style={{
-              backgroundColor: "#7e22ce", // Match purple theme
-              color: "white",
-              border: "none",
-              borderRadius: "8px",
-              padding: "10px 20px",
-              fontWeight: "bold",
-              fontSize: "14px",
-              cursor: "pointer",
-              boxShadow: "0 0 10px rgba(192, 132, 252, 0.6)", // Glow effect
-              textTransform: "uppercase",
-              }} 
-            onClick={handleSave}>
-              Save
-            </button>
-            <button style={{
-              backgroundColor: "#7e22ce", // Match purple theme
-              color: "white",
-              border: "none",
-              borderRadius: "8px",
-              marginLeft: "20px",
-              padding: "10px 20px",
-              fontWeight: "bold",
-              fontSize: "14px",
-              cursor: "pointer",
-              boxShadow: "0 0 10px rgba(192, 132, 252, 0.6)", // Glow effect
-              textTransform: "uppercase",
-              }} 
-            onClick={handleDelete}>
-              Delete
-            </button>
-          </div>
-        </div>
-      </div>
-    )}
   </div>
 )}
 
 
 <div className="layout-wrapper">
-<div>
+  <div className="background-stars">
+  <div>
   <TipsStar tip = "limit caffeine in the afternoon!" left = "6%" top = "15%"></TipsStar>
   <TipsStar tip = "try to not use your devices 1 hour before bed" left = "14%" top = "30%"></TipsStar>
   <TipsStar tip = "try to wake up at the same time everyday!" left = "14%" top = "45%"></TipsStar>
@@ -1189,14 +903,15 @@ function SleepTracker() {
 </div>
 
 
-<div 
-class = "polar-star">
+<div class = "polar-star">
   <svg viewBox="0 0 100 100" class="polar-svg" xmlns="http://www.w3.org/2000/svg">
     <polygon points="50,10 60,50 50,90 40,50" />
     <polygon points="10,50 50,60 90,50 50,40" />
   </svg>
   <div class = "polar-tip">follow your sleep cycles! </div>
 </div>
+</div>
+
 
 <h2 id = "tips-section" class = "title">
   Read below for theory behind a good sleep schedule!
