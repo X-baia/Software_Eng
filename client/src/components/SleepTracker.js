@@ -13,6 +13,8 @@ import TipsStar from "../TipsStar";
 import '../Popup.css';
 import '../App.css';
 import '../SleepTracker.css';
+import '../Log.css';
+import '../SleepLog.css'
 
 function SleepTracker() {
   const [mode, setMode] = useState("bedtime");
@@ -304,29 +306,11 @@ function SleepTracker() {
       <div style={{ position: "absolute", top: 20, right: 30 }}>
         {user ? (
           <div style={{ textAlign: "right", marginBottom: "20px" }}>
-            <span 
-            style={{
-              color: "#7e22ce",
-              padding: "10px 15px", 
-              fontSize: "18px"}}
-            >
+            <span className="welcome-text">
               Welcome, {user.username}</span>
             <button
               onClick={logout}
-              style={{
-                backgroundColor: "#7e22ce", // Match purple theme
-                color: "white",
-                border: "none",
-                borderRadius: "8px",
-                padding: "10px 15px",
-                fontWeight: "bold",
-                fontSize: "14px",
-                cursor: "pointer",
-                boxShadow: "0 0 10px rgba(192, 132, 252, 0.6)", // Glow effect
-                textTransform: "uppercase",
-              }}
-              onMouseEnter={(e) => (e.currentTarget.style.boxShadow = "0 0 15px rgba(192, 132, 252, 0.8)")}
-              onMouseLeave={(e) => (e.currentTarget.style.boxShadow = "0 0 10px rgba(192, 132, 252, 0.6)")}
+              className="log-button"
             >
               Logout
             </button>
@@ -335,20 +319,7 @@ function SleepTracker() {
           <div style={{ textAlign: "right", marginBottom: "20px" }}>
             <button
               onClick={() => setShowLoginPopup(true)}
-              style={{
-                backgroundColor: "#7e22ce", // Match purple theme
-                color: "white",
-                border: "none",
-                borderRadius: "8px",
-                padding: "10px 15px",
-                fontWeight: "bold",
-                fontSize: "14px",
-                cursor: "pointer",
-                boxShadow: "0 0 10px rgba(192, 132, 252, 0.6)", // Glow effect
-                textTransform: "uppercase",
-              }}
-              onMouseEnter={(e) => (e.currentTarget.style.boxShadow = "0 0 15px rgba(192, 132, 252, 0.8)")}
-              onMouseLeave={(e) => (e.currentTarget.style.boxShadow = "0 0 10px rgba(192, 132, 252, 0.6)")}
+              className="log-button"
             >
               Login / Register
             </button>
@@ -358,52 +329,11 @@ function SleepTracker() {
 
       {/* Login/Register Popup */}
       {showLoginPopup && (
-        <div
-          style={{
-            position: "fixed",
-            top: 0,
-            left: 0,
-            right: 0,
-            bottom: 0,
-            backgroundColor: "rgba(0,0,0,0.8)", // Darker overlay
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            zIndex: 1000,
-            animation: "fadeIn 0.5s ease", // Fade-in animation
-          }}
-        >
-          <div
-            style={{
-              backgroundColor: "#333", // Match app's dark theme
-              padding: "30px",
-              borderRadius: "10px",
-              position: "relative",
-              width: "350px",
-              boxShadow: "0 0 20px rgba(192, 132, 252, 0.6)", // Purple glow
-              color: "white",
-              fontFamily: "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif",
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "center", // Center content horizontally
-              animation: "scaleIn 0.5s ease", // Scale-in animation
-            }}
-          >
+        <div className="login-popup">
+          <div className="login-form">
             <button
               onClick={closePopup}
-              style={{
-                position: "absolute",
-                top: "10px",
-                right: "10px",
-                background: "transparent",
-                border: "none",
-                fontSize: "18px",
-                color: "#c084fc", // Purple close button
-                cursor: "pointer",
-                transition: "transform 0.2s ease", // Button click animation
-              }}
-              onMouseDown={(e) => (e.currentTarget.style.transform = "scale(0.9)")}
-              onMouseUp={(e) => (e.currentTarget.style.transform = "scale(1)")}
+              className="close-login"
             >
               &times;
             </button>
@@ -419,50 +349,21 @@ function SleepTracker() {
             >
               {authMode === "login" ? "Login" : "Register"}
             </h3>
-
-            <input
+            
+            
+            <input /*input for the username and for the password in the log in popup*/
               type="text"
               placeholder="Username"
               value={authFields.username}
               onChange={(e) => setAuthFields({ ...authFields, username: e.target.value })}
-              style={{
-                width: "100%",
-                maxWidth: "300px", // Ensure consistent width
-                marginBottom: "15px",
-                padding: "12px",
-                borderRadius: "8px",
-                border: "1px solid #ccc",
-                backgroundColor: "#222",
-                color: "white",
-                outline: "none",
-                fontSize: "16px",
-                textAlign: "center", // Center text inside input
-                transition: "all 0.3s",
-              }}
-              onFocus={(e) => (e.target.style.border = "1px solid #c084fc")}
-              onBlur={(e) => (e.target.style.border = "1px solid #ccc")}
+              className="user-input"
             />
             <input
               type="password"
               placeholder="Password"
               value={authFields.password}
               onChange={(e) => setAuthFields({ ...authFields, password: e.target.value })}
-              style={{
-                width: "100%",
-                maxWidth: "300px", // Ensure consistent width
-                marginBottom: "10px",
-                padding: "12px",
-                borderRadius: "8px",
-                border: "1px solid #ccc",
-                backgroundColor: "#222",
-                color: "white",
-                outline: "none",
-                fontSize: "16px",
-                textAlign: "center", // Center text inside input
-                transition: "all 0.3s",
-              }}
-              onFocus={(e) => (e.target.style.border = "1px solid #c084fc")}
-              onBlur={(e) => (e.target.style.border = "1px solid #ccc")}
+              className="user-input"
             />
 
             {authMode === "register" && (
@@ -471,79 +372,25 @@ function SleepTracker() {
             placeholder="Date of Birth"
             value={authFields.dob || ""}
             onChange={(e) => setAuthFields({ ...authFields, dob: e.target.value })}
-            style={{
-                width: "100%",
-                maxWidth: "300px", // Ensure consistent width
-                marginBottom: "10px",
-                padding: "12px",
-                borderRadius: "8px",
-                border: "1px solid #ccc",
-                backgroundColor: "#222",
-                color: "white",
-                outline: "none",
-                fontSize: "16px",
-                textAlign: "center", // Center text inside input
-                transition: "all 0.3s",
-              }}
-              onFocus={(e) => (e.target.style.border = "1px solid #c084fc")}
-              onBlur={(e) => (e.target.style.border = "1px solid #ccc")}
+            className="user-input"
             />
             )}
 
             {authMode === "register" && (
-              <p
-                style={{
-                  color: "#c084fc", // Purple text
-                  fontSize: "18px",
-                  textAlign: "center",
-                  marginBottom: "15px",
-                }}
-              >
+              <p className="password-alert">
                 The password must be 8 character long and contain at least a number.
               </p>
             )}
 
             <button
               onClick={handleAuth}
-              style={{
-                width: "100%",
-                maxWidth: "300px", // Ensure consistent width
-                padding: "12px",
-                backgroundColor: "#7e22ce", // Purple button
-                color: "white",
-                marginBottom: "15px",
-                border: "none",
-                borderRadius: "8px",
-                fontWeight: "bold",
-                fontSize: "16px",
-                cursor: "pointer",
-                boxShadow: "0 0 10px rgba(192, 132, 252, 0.6)", // Glow effect
-                textTransform: "uppercase",
-                transition: "transform 0.2s ease", // Button click animation
-              }}
-              onMouseDown={(e) => (e.currentTarget.style.transform = "scale(0.95)")}
-              onMouseUp={(e) => (e.currentTarget.style.transform = "scale(1)")}
+              className="register-button"
             >
               {authMode === "login" ? "Login" : "Register"}
             </button>
             <button
               onClick={() => setAuthMode(authMode === "login" ? "register" : "login")}
-              style={{
-                width: "100%",
-                maxWidth: "300px", // Ensure consistent width
-                padding: "12px",
-                backgroundColor: "#444", // Darker button for secondary action
-                color: "white",
-                border: "none",
-                borderRadius: "8px",
-                fontWeight: "bold",
-                fontSize: "14px",
-                cursor: "pointer",
-                textTransform: "uppercase",
-                transition: "transform 0.2s ease", // Button click animation
-              }}
-              onMouseDown={(e) => (e.currentTarget.style.transform = "scale(0.95)")}
-              onMouseUp={(e) => (e.currentTarget.style.transform = "scale(1)")}
+              className="second-action"
             >
               {authMode === "login" ? "Need an account? Register" : "Already have an account? Login"}
             </button>
@@ -599,16 +446,7 @@ function SleepTracker() {
     </div>
     <div
       onClick={() => setMode(mode === "bedtime" ? "alarm" : "bedtime")}
-      style={{
-        width: "60px",
-        height: "30px",
-        borderRadius: "15px",
-        backgroundColor: "#333",
-        position: "relative",
-        cursor: "pointer",
-        transition: "background-color 0.3s ease",
-        boxShadow: "inset 0 0 5px rgba(0,0,0,0.5)"
-      }}
+      className="button-select-mode"
     >
       <div style={{
         width: "26px",
@@ -662,14 +500,7 @@ function SleepTracker() {
       paddingBottom: "20px"
     }}>
       <label>
-        <span style={{
-          display: "block",
-          textAlign: "center",
-          marginBottom: "10px",
-          fontWeight: "bold",
-          fontFamily: "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif",
-          textTransform: "uppercase"
-        }}>
+        <span className="bed-alarm-text">
           Bedtime:
         </span>
       </label>
@@ -716,14 +547,7 @@ function SleepTracker() {
       paddingBottom: "20px"
     }}>
       <label>
-        <span style={{
-          display: "block",
-          textAlign: "center",
-          marginBottom: "10px",
-          fontWeight: "bold",
-          fontFamily: "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif",
-          textTransform: "uppercase"
-        }}>
+        <span className="bed-alarm-text">
           Alarm Time:
         </span>
       </label>
@@ -742,14 +566,7 @@ function SleepTracker() {
     paddingBottom: "20px"
   }}>
     <label>
-      <span style={{
-        display: "block",
-        textAlign: "center",
-        marginBottom: "10px",
-        fontWeight: "bold",
-        fontFamily: "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif",
-        textTransform: "uppercase"
-      }}>
+      <span className="bed-alarm-text">
         Time to fall asleep (min):
       </span>
     </label>
@@ -779,17 +596,7 @@ function SleepTracker() {
       >
         Suggested {mode === "bedtime" ? "Wake Times" : "Bedtimes"}:
       </h3>
-      <ul
-        style={{
-          display: "block",
-          width: "100%",
-          maxWidth: "220px",
-          margin: "20px auto 0 auto",
-          paddingLeft: 0,
-          listStyleType: "none",
-          textAlign: "center",
-          fontSize: "14px"
-        }}
+      <ul className="suggested-times"
       >
         {recommendations.map((time, index) => {
           const isCentral = index === Math.floor(recommendations.length / 2);
@@ -841,6 +648,15 @@ function SleepTracker() {
 {user && sleepLog.length > 0 && (
   <div style={{ marginTop: "50px" }}>
     <h2 style={{ textAlign: "center", color: "white" }}>Your Sleep Log</h2>
+    <h2 style={{
+      marginTop: "-7px",
+      color: "white", 
+      textAlign: "center", 
+      fontSize: "18px",
+      }}> 
+      To edit yout log, click on a column 
+      </h2>
+    
     <ResponsiveContainer width="100%" height={300}>
       <BarChart data={sleepLog}>
         <CartesianGrid stroke="#444" strokeDasharray="4 4" />
@@ -880,6 +696,59 @@ function SleepTracker() {
         Clear all Logs
       </button>
     </div>
+
+    {selectedLog && (
+      <div style={{
+        position: "fixed", top: 0, left: 0, right: 0, bottom: 0,
+        backgroundColor: "rgba(0, 0, 0, 0.85)",
+        display: "flex", alignItems: "center", justifyContent: "center",
+        zIndex: 1000,
+        }}>
+        <div className="editor-box">
+          <button
+              onClick={() => setSelectedLog(null)}
+              className="close-editor"
+            >
+              &times;
+            </button>
+          <h3 style={{ color: "#fff" }}>Edit Sleep Log</h3>
+          <p style={{ color: "#ccc" }}><strong>Date:</strong> {selectedLog.date}</p>
+          <p style={{ color: "#ccc" }}><strong>Time:</strong> {selectedLog.selectedTime}</p>
+          <p style={{ color: "#ccc" }}><strong>Mode:</strong> {selectedLog.mode}</p>
+
+          <label style={{ color: "#fff" }}>
+            Hours Slept:
+            <input
+              type="number"
+              value={editedHours}
+              onChange={(e) => setEditedHours(e.target.value)}
+              style={{
+                marginTop: "10px",
+                width: "100%",
+                padding: "10px",
+                borderRadius: "5px",
+                border: "1px solid #ccc",
+                backgroundColor: "#333",
+                color: "#fff"
+              }}
+            />
+          </label>
+
+          <div style={{ marginTop: "20px" }}>
+            <button 
+            className="button-save" 
+            onClick={handleSave}>
+              Save
+            </button>
+            <button 
+            className="button-delete"
+            onClick={handleDelete}>
+              Delete
+            </button>
+          </div>
+        </div>
+      </div>
+    )}
   </div>
 )}
 
