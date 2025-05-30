@@ -13,8 +13,10 @@ import TipsStar from "../TipsStar";
 import '../Popup.css';
 import '../App.css';
 import '../SleepTracker.css';
-import '../Log.css';
-import '../SleepLog.css'
+import '../User.css';
+import '../SleepLog.css';
+import '../ReferenceTab';
+import ReferenceTab from "../ReferenceTab";
 
 function SleepTracker() {
   const [mode, setMode] = useState("bedtime");
@@ -654,7 +656,7 @@ function SleepTracker() {
       textAlign: "center", 
       fontSize: "18px",
       }}> 
-      To edit yout log, click on a column 
+      To edit your log, click on a column 
       </h2>
     
     <ResponsiveContainer width="100%" height={300}>
@@ -934,8 +936,9 @@ function SleepTracker() {
       your sleeping schedule.
     </p>
   </div>
-
   </div>
+
+  <ReferenceTab></ReferenceTab>
   
 </div>
 </div>
