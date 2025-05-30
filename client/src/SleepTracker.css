@@ -1,3 +1,4 @@
+/* css for the actual sleep calculator block*/
 .block{
   max-width: 500px;
   margin: 0 auto;
@@ -217,20 +218,34 @@
     transform: scale(0.95);
 }
 
-.button-clear-sleep-data{
-    background-color: #7e22ce;
-    color: white;
-    border: none;
-    border-radius: 8px;
-    margin-top: 20px;
-    padding: 10px 15px;
-    font-weight: bold;
-    font-size: 14px;
+.button-select-mode{
+    width: 60px;
+    height: 30px;
+    border-radius: 15px;
+    background-color: #333;
+    position: relative;
     cursor: pointer;
-    box-shadow: 0 0 10px rgba(192, 132, 252, 0.6);
+    transition: background-color 0.3s ease;
+    box-shadow: inset 0 0 5px rgba(0,0,0,0.5);
+}
+
+.bed-alarm-text{
+    display: block;
+    text-align: center;
+    margin-bottom: 10px;
+    font-weight: bold;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     text-transform: uppercase;
 }
 
-.button-clear-sleep-data:hover{
-    box-shadow: 0 0 15px rgba(192, 132, 252, 0.8);
+.suggested-times{
+    display: block;
+    width: 100%;
+    max-width: 220px;
+    margin: 20px auto 0 auto;
+    padding-left: 0;
+    list-style-type: none;
+    text-align: center;
+    font-size: 14px;
+    margin-bottom: 3px;
 }
