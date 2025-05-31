@@ -10,12 +10,11 @@ import {
 } from "recharts";
 
 import TipsStar from "../TipsStar";
-import '../Popup.css';
-import '../App.css';
-import '../SleepTracker.css';
-import '../User.css';
-import '../SleepLog.css';
-import '../ReferenceTab';
+import '../css/Popup.css';
+import '../css/App.css';
+import '../css/SleepTracker.css';
+import '../css/User.css';
+import '../css/SleepLog.css';
 import ReferenceTab from "../ReferenceTab";
 
 function SleepTracker() {
@@ -56,6 +55,7 @@ function SleepTracker() {
   }
 }, [user]);
 
+  //based on your age you ahve to sleep a certain amount of time, this returns the amount of hours based on the age range
   const getSleepRangeByAge = (age) => {
     if (age >= 1 && age <= 2) return [12, 14];
     if (age >= 3 && age <= 5) return [10, 13];
@@ -64,6 +64,7 @@ function SleepTracker() {
     return [7, 9];
   };
 
+  //actual computation of the sleep cycles
   const calculateTimes = () => {
     if (!age || isNaN(age)) return alert("Please enter a valid age.");
     const [minSleep, maxSleep] = getSleepRangeByAge(Number(age));
@@ -102,14 +103,14 @@ function SleepTracker() {
 
   const confirmSelection = async () => {
     if (!selectedRecommendation) {
-      // Show a styled popup if no time is selected, css in in Popup.css
+      // show a popup if no time is selected, css in in Popup.css
       const popup = document.createElement("div");
       popup.innerText = "Please select a time.";
       popup.classList.add('popup')
 
       document.body.appendChild(popup);
 
-      // Remove the popup after 2 seconds
+      // remove the popup after 2 seconds
       setTimeout(() => {
         popup.style.animation = "fadeOut 0.3s ease";
         popup.addEventListener("animationend", () => popup.remove());
@@ -119,7 +120,7 @@ function SleepTracker() {
     }
 
     if (!user) {
-      // Show a popup if the user is not logged in
+      // show a popup if the user is not logged in, css in Popup.css
       const popup = document.createElement("div");
       popup.className = "popup-not-logged";
 
@@ -176,6 +177,7 @@ function SleepTracker() {
       mode,
     };
 
+    //used for logging in the Sleep Log the amount of time you've slept based on the computations
     const response = await fetch("http://localhost:5001/api/sleepLogs", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -214,6 +216,7 @@ function SleepTracker() {
   setEditedHours(data.hours);
   };
 
+  //function to save modifications to a certain log
   const handleSave = async () => {
     if (!selectedLog || !editedHours) return;
 
@@ -231,6 +234,7 @@ function SleepTracker() {
     }
   };
 
+  //delete modifications
   const handleDelete = async () => {
   if (!selectedLog) return;
     console.log("Attempting to delete log ID:", selectedLog._id);
@@ -270,7 +274,6 @@ function SleepTracker() {
       setUser(data.user);
       closePopup();
     } else {
-      // Try to extract error message from response
     let errorMsg = "Failed to authenticate";
     try {
       const errorData = await res.json();
@@ -301,6 +304,8 @@ function SleepTracker() {
   };
 
   return (
+    //top right corner with logout button and the welcome to the user
+    <div className="layout-wrapper">
     <div
       className="bg-neutral-950"
       style={{ backgroundColor: "#000", minHeight: "100vh", padding: "40px", fontFamily: "Arial, sans-serif" }}
@@ -408,7 +413,7 @@ function SleepTracker() {
   <div style={{
     marginBottom: "25px",
     borderBottom: "1px solid black",
-    paddingBottom: "20px"
+    paddingBottom: "20px",
   }}>
     <label>
       <span class = "age-block">
@@ -420,8 +425,6 @@ function SleepTracker() {
         type="number"
         value={age}
         onChange={(e) => setAge(e.target.value)}
-        onFocus={(e) => (e.target.style.border = "1px solid #c084fc")}
-        onBlur={(e) => (e.target.style.border = "1px solid #ccc")}
       />
     ) : (
       <p class= "age">
@@ -430,6 +433,7 @@ function SleepTracker() {
     )}
   </div>
 
+  
   <div style={{ display: "flex", alignItems: "center", justifyContent: "center", marginBottom: "20px", gap: "15px" }}>
     <div style={{ position: "relative", display: "inline-block" }} className="tooltip-alarm">
       <span
@@ -647,6 +651,8 @@ function SleepTracker() {
   )}
 </div>
 
+
+
 {user && sleepLog.length > 0 && (
   <div style={{ marginTop: "50px" }}>
     <h2 style={{ textAlign: "center", color: "white" }}>Your Sleep Log</h2>
@@ -680,7 +686,7 @@ function SleepTracker() {
         <Tooltip
           cursor={false} // Prevents full graph highlight
           contentStyle={{
-          backgroundColor: "#222", // dark tooltip
+          backgroundColor: "#222", 
           borderColor: "#c084fc",
           color: "#fff"
           }}
@@ -755,7 +761,7 @@ function SleepTracker() {
 )}
 
 
-<div className="layout-wrapper">
+
   <div className="background-stars">
   <div>
   <TipsStar tip = "limit caffeine in the afternoon!" left = "6%" top = "15%"></TipsStar>
@@ -788,7 +794,6 @@ function SleepTracker() {
   Read below for theory behind a good sleep schedule!
 </h2>
 
-</div>
 
 
 
@@ -940,6 +945,7 @@ function SleepTracker() {
 
   <ReferenceTab></ReferenceTab>
   
+  </div>
 </div>
 </div>
 );

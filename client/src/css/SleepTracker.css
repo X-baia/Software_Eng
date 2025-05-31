@@ -7,7 +7,8 @@
   border-radius: 10px;
   box-shadow: 0 0 20px #c084fc;
   font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  color: white
+  color: white;
+  z-index: 50;
 }
 
 .age-block{
@@ -33,6 +34,10 @@
     outline: none;
     font-size: 18px;
     transition: all 0.3s
+}
+
+.input-age:focus{
+  border: 1px solid #c084fc;
 }
 
 .age{
@@ -248,4 +253,12 @@
     text-align: center;
     font-size: 14px;
     margin-bottom: 3px;
+}
+
+.layout-wrapper{
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  height: 100%;
+  width: 100%;
 }

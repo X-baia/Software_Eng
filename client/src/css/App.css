@@ -159,6 +159,7 @@
   cursor: pointer;
   top: 110px;
   left: 170px;
+  z-index: 0;
 }
 
 .glow-star {
@@ -224,6 +225,7 @@
   width: 50px;
   height: 50px;
   cursor: pointer;
+  z-index: 0;
 }
 
 .polar-tip{
@@ -248,6 +250,7 @@
 .polar-star:hover .polar-tip {
   opacity: 1;
 }
+
 
 @media (max-width: 480px) {
   .star-container {
@@ -322,22 +325,22 @@
   gap: 20px;
   width: 100%;
   padding-top: 20px;
-  overflow-x: auto;             /* Enable horizontal scrolling */
-  scrollbar-width: thin;        /* Firefox */
-  scrollbar-color: white transparent; /* Firefox */
+  overflow-x: scroll;             /* Enable horizontal scrolling */
+  scrollbar-width: thin;       
+  scrollbar-color: white transparent; 
   padding-bottom: 10px;
   -webkit-overflow-scrolling: touch;
 }
 
 .tips-scroller::-webkit-scrollbar {
-  height: 5px; /* Thin scrollbar */
+  height: 5px; 
 }
 
 .tips-scroller::-webkit-scrollbar-track {
   background: transparent;
 }
 .tips-scroller::-webkit-scrollbar-thumb {
-  background-color: rgba(255, 255, 255, 0.4); /* Slightly visible */
+  background-color: rgba(255, 255, 255, 0.6); 
   border-radius: 3px;
 }
 
@@ -474,12 +477,7 @@ html{
   scroll-behavior: smooth;
 }
 
-.layout-wrapper{
-  display: flex;
-  flex-direction: column;
-  align-items: start;
-  gap: 20px;
-}
+
 
 
 /*reference list*/
