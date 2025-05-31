@@ -810,12 +810,12 @@ function SleepTracker() {
 
   <div className="rhythm-box">    
     <h3>⌛️ What's the circadian rhythm?</h3>
-      <p>  It helps living beings respond to changes in their environment in ways that conserve energy, help them find food and allow them to grow and heal. 
-      In humans it helps to regulate sleeping, core body temperature, immune system, hormones, metabolism, cognitive function, the body’s reaction to stress. 
-      It is controlled by biological clocks in organs and especially a  “clock” in a part of the brain. This clock operates on a cycle slightly longer than 24 hours, in order to maintain alignment with the 24 hours of the planet rotation the clock adjusts itself 
+      <p>  It helps living beings respond to changes in their environment in ways that conserve energy, it helps them find food and allows them to grow and heal. 
+      In humans it helps to regulate sleeping, core body temperature, immune system, hormones, metabolism, cognitive function and the body’s reaction to stress. 
+      The circadian rhythm is controlled by biological clocks in different organs and especially in the brain. This last clock operates on a cycle slightly longer than 24 hours. In order to maintain alignment with the 24 hours of the planet rotation the clock adjusts itself 
       by about 12 to 18 minutes every day, using environmental cues.
       The most important ones are sleep and light while others include: meals, exercise, social interactions, daily routines and stress.
-      Having an aligned circadian rhythm can help you fall asleep and have a better sleeping schedule.
+      Having an aligned circadian rhythm can help you fall asleep and have a better sleeping schedule. 
      </p>
 
     <h3>To mantain a healthy rhythm:</h3>
@@ -863,7 +863,7 @@ function SleepTracker() {
     <div className="tip-box3">
       <h3>✨ Sleep cycles</h3>
       <p>
-      Follow your sleep cycle! Sleep cycles are made of 1.5 hours each, using our site you can find the best time to go to bed or the best time to wake up at!
+      Follow your sleep cycles! Sleep cycles are made of 1.5 hours each, using our site you can find the best time to go to bed or the best time to wake up at!
       One sleep cycles is divided between 2 different kind of stages, the Non-REM sleep and the REM sleep. Waking up between stages can make you feel tired even if you've just woken up.
       Studies suggest that it's better to wake up in between cycles. Our site is here to help you accomplish this goal!
       </p>
@@ -875,14 +875,14 @@ function SleepTracker() {
       <p> Simple relaxing techniques can be reading a book or listening to soothing music. You can also try some breathing exercises, for example:
         place one of your hands on your stomach and the other on your chest, inhale slowly directing your breath to the belly, concentrate on how your hands move, exhale slowly and feel how the hand 
         on your stomach gradually fall. You can also try some meditation techniques, we suggest the 
-        <span className="tool-tip"><strong> body scan meditation</strong>
+        <span className="tool-tip"><strong> body scan meditationℹ️</strong>
           <span className="tooltip-text">
             <ol>
-              <li> Lie in bed with your hands at your side.</li>
-              <li>Spend a few seconds concentrating on your breathing</li>
-              <li>Concentrate on the sensations you feel in your feet</li>
+              <li> Lie in bed with your hands at your side</li>
+              <li> Spend a few seconds concentrating on your breathing</li>
+              <li> Concentrate on the sensations you feel in your feet</li>
               <li> Breathe deeply and imagine the breath travelling to your feet. Exhale and let your feet dissolve from your awarness</li>
-              <li>Move your attention progressively upward until reaching your head.</li>
+              <li> Move your attention progressively upward until reaching your head</li>
              <li> Finish by becoming aware of your whole body and breath deeply</li>
             </ol>
           </span>
