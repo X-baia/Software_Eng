@@ -3,7 +3,7 @@ We've created DeepSleep, the web application was designed with the intent of hel
 
 
 ## Requirements for the installation:
-install Node.js, navigate to the project folder (after having it cloned from GitHub) and use the command npm install to install the required libraries. If any package is missing, you can installing manually like this -> npm install package-missing
+Install Node.js, navigate to the project folder (after having it cloned from GitHub) and use the command npm install to install the required libraries. If any package is missing, you can installing manually like this -> npm install package-missing
 
 The server runs on MongoDb, please install it and before using our web application activate it.
 If you have already installed Node.js you can use this command to install it -> npm install express mongoose
