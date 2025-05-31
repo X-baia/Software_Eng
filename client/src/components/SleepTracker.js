@@ -764,7 +764,7 @@ function SleepTracker() {
 
 
 
-  <div className="background-stars">
+  
     <div>
     <TipsStar tip = "limit caffeine in the afternoon!" left = "6%" top = "15%"></TipsStar>
     <TipsStar tip = "try to not use your devices 1 hour before bed" left = "14%" top = "30%"></TipsStar>
@@ -789,11 +789,11 @@ function SleepTracker() {
       </svg>
       <div class = "polar-tip">follow your sleep cycles! </div>
     </div>
-  </div>
+ 
 
 
   <h2 id = "tips-section" class = "title">
-    Read below for theory behind a good sleep schedule!
+    Read below for some theory behind a good sleep schedule!
   </h2>
 
 

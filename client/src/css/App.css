@@ -153,13 +153,12 @@
   transform: translateX(-50%);
 }
 
-/*stars*/
+/*stars, positioned as the ursa major and ursa minor*/
 .star-container {
   position: absolute;
   cursor: pointer;
   top: 110px;
   left: 170px;
-  z-index: 0;
 }
 
 .glow-star {
@@ -225,7 +224,6 @@
   width: 50px;
   height: 50px;
   cursor: pointer;
-  z-index: 0;
 }
 
 .polar-tip{
@@ -250,6 +248,7 @@
 .polar-star:hover .polar-tip {
   opacity: 1;
 }
+
 
 
 @media (max-width: 480px) {
@@ -327,7 +326,7 @@
   padding-top: 20px;
   overflow-x: scroll;             /* Enable horizontal scrolling */
   scrollbar-width: thin;       
-  scrollbar-color: white transparent; 
+  scrollbar-color: rgba(255, 255, 255, 0.716) transparent; 
   padding-bottom: 10px;
   -webkit-overflow-scrolling: touch;
 }
