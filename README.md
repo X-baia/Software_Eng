@@ -1,5 +1,5 @@
 # DeepSleep
-We've created DeepSleep, the web application was designed with the intent of helping users optimize their sleep. The user can either register for additional feauters or use it freely. The main idea is that when the user inserts the chosen bedtime (bedtime mode) or the chosen wake up time (alarm mode), the site can suggest you the best time to wake up or the best one to go to sleep! If you decide to register you can also access to the part of the Sleep Log where you can see, each day, how much you've slept. We also offer some tips and tricks to help you sleep better and wake up more refreshed.
+We've created DeepSleep, this web application was designed with the intent of helping users optimize their sleep. The user can either register for additional feauters or use it freely. The main idea is that when the user inserts the chosen bedtime (bedtime mode) or the chosen wake up time (alarm mode), the site can suggest you the best time to wake up or the best one to go to sleep! If you decide to register you can also access to the part of the Sleep Log where you can see, each day, how much you've slept. We also offer some tips and tricks to help you sleep better and wake up more refreshed.
 
 
 ## Requirements for the installation:
