@@ -13,12 +13,14 @@ const crypto = require("crypto");
 const rateLimit = require("express-rate-limit");
 
 
-// === CONFIGURATION ===
+// configuration
 const app = express();
 const PORT = 5001;
-const JWT_SECRET = "super_secure_jwt_secret"; // Replace with env variable in production
+const JWT_SECRET = "super_secure_jwt_secret"; 
+//if we ever publish the site we would need to use an environment variable. Since we've decided, for now, to keep the site local
+//we didn't implement it
 
-// === MIDDLEWARE ===
+// middlewear
 app.use(cors({
   origin: "http://localhost:3000",
   credentials: true
@@ -26,7 +28,7 @@ app.use(cors({
 app.use(express.json());
 app.use(cookieParser());
 
-// === MONGODB CONNECTION ===
+// connection to mongodb
 mongoose.connect("mongodb://localhost:27017/sleepTracker", {
   useNewUrlParser: true,
   useUnifiedTopology: true,
@@ -34,7 +36,7 @@ mongoose.connect("mongodb://localhost:27017/sleepTracker", {
 .then(() => console.log("Connected to MongoDB"))
 .catch(err => console.error("MongoDB connection error:", err));
 
-// === SCHEMAS ===
+// schemas
 const userSchema = new mongoose.Schema({
   username: { type: String, unique: true },
   password: {type: String, required: true},
@@ -53,7 +55,7 @@ const sleepLogSchema = new mongoose.Schema({
 const User = mongoose.model("User", userSchema);
 const SleepLog = mongoose.model("SleepLog", sleepLogSchema);
 
-// === AUTH MIDDLEWARE ===
+// auth middleware
 function authMiddleware(req, res, next) {
   const token = req.cookies.token;
   if (!token) return res.status(401).json({ error: "Unauthorized" });
@@ -67,11 +69,11 @@ function authMiddleware(req, res, next) {
   }
 }
 
-// === AUTH ROUTES ===
+// auth routes
 
-// Register
+// register
 
-// Checks if the password has been exposed in breaches
+// checks if the password has been exposed in breaches
 async function isPasswordBreached(password) {
   const sha1 = crypto.createHash("sha1").update(password).digest("hex").toUpperCase();
   const prefix = sha1.slice(0, 5);
@@ -84,7 +86,6 @@ async function isPasswordBreached(password) {
     return breachedList.includes(suffix);
   } catch (err) {
     console.error("HIBP password check failed", err.message);
-    // You can choose to fail closed (reject) or fail open (allow)
     return false;
   }
 }
@@ -110,7 +111,7 @@ app.post("/api/register", async (req, res) => {
     });
   }
 
-  // Check against common weak passwords
+  // check against common weak passwords
   if (commonPasswords.includes(password.toLowerCase())) {
     return res.status(400).json({ error: "Password is too common. Choose a stronger one." });
   }
@@ -128,7 +129,7 @@ app.post("/api/register", async (req, res) => {
   }
 
   try {
-    // Calculate age
+    // calculate age
     const birthDate = new Date(dob);
     const today = new Date();
     let age = today.getFullYear() - birthDate.getFullYear();
@@ -141,10 +142,11 @@ app.post("/api/register", async (req, res) => {
     const user = new User({ username, password: hashed, dob, age });
     await user.save();
 
-    // Create JWT token for the newly registered user
+    // create JWT token for the newly registered user
     const token = jwt.sign({ id: user._id, username }, JWT_SECRET, { expiresIn: "2d" });
 
-    // Set the token cookie to log in the user automatically
+    
+    // set the token cookie to log in the user automatically
     res.cookie("token", token, {
       httpOnly: true,
       sameSite: "Lax",
@@ -159,9 +161,9 @@ app.post("/api/register", async (req, res) => {
   }
 });
 
-// Login
+// login
 
-// Limit to 5 login attempts per IP per 15 minutes
+// limit to 10 login attempts per IP per 15 minutes
 const loginLimiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
   max: 10,
@@ -176,7 +178,7 @@ app.post("/api/login", loginLimiter, async (req, res) => {
   const isMatch = await bcrypt.compare(password, user.password);
   if (!isMatch) return res.status(400).json({ error: "Invalid credentials" });
 
-  // Recalculate age based on current date and user's dob
+  // recalculate age based on current date and user's dob
   const birthDate = new Date(user.dob);
   const today = new Date();
   let age = today.getFullYear() - birthDate.getFullYear();
@@ -185,28 +187,29 @@ app.post("/api/login", loginLimiter, async (req, res) => {
     age--;
   }
 
-  // Update age in the database if it changed
+  // update age in the database if it changed
   if (user.age !== age) {
     user.age = age;
     await user.save();
   }
 
   const token = jwt.sign({ id: user._id, username }, JWT_SECRET, { expiresIn: "2d" });
+  
   res.cookie("token", token, {
     httpOnly: true,
     sameSite: "Lax",
-    secure: false // Set to true in production with HTTPS
-  });
+    secure: false // set to true in production with HTTPS
+  }); 
   res.json({ message: "Logged in" });
 });
 
-// Logout
+// logout
 app.post("/api/logout", (req, res) => {
   res.clearCookie("token");
   res.json({ message: "Logged out" });
 });
 
-// Get current user info
+// get current user info
 app.get("/api/me", authMiddleware, async (req, res) => {
   try {
     const user = await User.findById(req.user.id).select("-password");
@@ -220,46 +223,29 @@ app.get("/api/me", authMiddleware, async (req, res) => {
   }
 });
 
-// === SLEEP LOG ROUTES ===
+// sleep log routes
 
-// Get all logs for authenticated user
+// get all logs for authenticated user
 app.get("/api/sleepLogs", authMiddleware, async (req, res) => {
   const logs = await SleepLog.find({ userId: req.user.id });
   res.json(logs);
 });
 
-// Get all users - only for development/testing!
-app.get("/api/users", async (req, res) => {
-  try {
-    const users = await User.find({}, "-password").lean(); // Exclude password
-    const formattedUsers = users.map(user => ({
-      username: user.username,
-      dob: user.dob instanceof Date
-        ? user.dob.toISOString().split("T")[0]  // "YYYY-MM-DD"
-        : "N/A",
-        age: typeof user.age === "number" ? user.age : "N/A"
-    }));
-    res.json({ users: formattedUsers });
-  } catch (err) {
-    console.error("Error fetching users:", err);
-    res.status(500).json({ error: "Failed to fetch users" });
-  }
-});
 
-// Create new log
+// create new log
 app.post("/api/sleepLogs", authMiddleware, async (req, res) => {
   const log = new SleepLog({ ...req.body, userId: req.user.id });
   await log.save();
   res.status(201).json(log);
 });
 
-// Delete all logs for this user
+// delete all logs for this user
 app.delete("/api/sleepLogs", authMiddleware, async (req, res) => {
   await SleepLog.deleteMany({ userId: req.user.id });
   res.json({ message: "Sleep logs cleared" });
 });
 
-// Delete a specific sleep log by ID
+// delete a specific sleep log by ID
 app.delete("/api/sleepLogs/:id", authMiddleware, async (req, res) => {
   const logId = req.params.id;
 
@@ -300,7 +286,7 @@ app.put("/api/sleepLogs/:id", authMiddleware, async (req, res) => {
   }
 });
 
-// === SERVER START ===
+//  server start
 app.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`);
 });
