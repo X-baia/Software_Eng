@@ -1,5 +1,4 @@
 import React from "react";
-import { ChakraProvider } from "@chakra-ui/react"
 import SleepTracker from "./components/SleepTracker"; 
 
 function App() {

@@ -1,3 +1,5 @@
+//entry point for the react application, automatically created when we've created the React app.
+
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
@@ -11,7 +13,5 @@ root.render(
   </React.StrictMode>
 );
 
-// If you want to start measuring performance in your app, pass a function
-// to log results (for example: reportWebVitals(console.log))
-// or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
-reportWebVitals();
+
+reportWebVitals(); //this would have to be passed to the logs, for example, if we wanted to start monitoring

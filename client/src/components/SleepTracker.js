@@ -53,7 +53,7 @@ function SleepTracker() {
   if (user && user.age != null) {
     setAge(user.age.toString()); // Ensure it's a string if age input is bound to a text/number input
   }
-}, [user]);
+  }, [user]);
 
   //based on your age you ahve to sleep a certain amount of time, this returns the amount of hours based on the age range
   const getSleepRangeByAge = (age) => {
@@ -209,7 +209,7 @@ function SleepTracker() {
     .then((res) => (res.status === 401 ? [] : res.json()))
     .then(setSleepLog)
     .catch(() => {});
-};
+  };
 
   const handleBarClick = (data) => {
   setSelectedLog(data);
@@ -236,10 +236,10 @@ function SleepTracker() {
 
   //delete modifications
   const handleDelete = async () => {
-  if (!selectedLog) return;
-    console.log("Attempting to delete log ID:", selectedLog._id);
-  try {
-    const res = await fetch(`http://localhost:5001/api/sleepLogs/${selectedLog._id}`, {
+    if (!selectedLog) return;
+      console.log("Attempting to delete log ID:", selectedLog._id);
+    try {
+      const res = await fetch(`http://localhost:5001/api/sleepLogs/${selectedLog._id}`, {
       method: "DELETE",
       credentials: "include",
     });
@@ -253,10 +253,10 @@ function SleepTracker() {
     } else {
       alert(result.error || "Failed to delete log.");
     }
-  } catch (err) {
-    console.error("Delete error:", err);
-    alert("Failed to delete log.");
-  }
+    } catch (err) {
+      console.error("Delete error:", err);
+      alert("Failed to delete log.");
+    }
   };
 
   const handleAuth = async () => {
@@ -285,7 +285,7 @@ function SleepTracker() {
     }
 
     alert(errorMsg);
-  }
+    }
   };
 
   const logout = async () => {
@@ -405,16 +405,16 @@ function SleepTracker() {
         </div>
       )}
 
-<h1 className="deep-sleep-title">
-  DeepSleep
-</h1>
+    <h1 className="deep-sleep-title">
+    DeepSleep
+    </h1>
 
-<div class = "block">
-  <div style={{
-    marginBottom: "25px",
-    borderBottom: "1px solid black",
-    paddingBottom: "20px",
-  }}>
+  <div class = "block">
+    <div style={{
+      marginBottom: "25px",
+      borderBottom: "1px solid black",
+      paddingBottom: "20px",
+    }}>
     <label>
       <span class = "age-block">
         Your age:
@@ -431,25 +431,25 @@ function SleepTracker() {
         {user.age}
       </p>
     )}
-  </div>
+    </div>
 
   
-  <div style={{ display: "flex", alignItems: "center", justifyContent: "center", marginBottom: "20px", gap: "15px" }}>
-    <div style={{ position: "relative", display: "inline-block" }} className="tooltip-alarm">
-      <span
-        style={{
-          fontWeight: "bold",
-          textTransform: "uppercase",
-          textShadow: mode === "alarm" ? "0 0 8px #c084fc" : "none",
-          transition: "text-shadow 0.3s ease",
-        }}
-      >
+    <div style={{ display: "flex", alignItems: "center", justifyContent: "center", marginBottom: "20px", gap: "15px" }}>
+      <div style={{ position: "relative", display: "inline-block" }} className="tooltip-alarm">
+        <span
+          style={{
+            fontWeight: "bold",
+            textTransform: "uppercase",
+            textShadow: mode === "alarm" ? "0 0 8px #c084fc" : "none",
+            transition: "text-shadow 0.3s ease",
+         }}
+        >
         Alarm Mode
-      </span>
-      <div className="alarm-mode">
-        Calculates when to go to bed for a given alarm time.
+        </span>
+        <div className="alarm-mode">
+          Calculates when to go to bed for a given alarm time.
+        </div>
       </div>
-    </div>
     <div
       onClick={() => setMode(mode === "bedtime" ? "alarm" : "bedtime")}
       className="button-select-mode"
@@ -464,71 +464,72 @@ function SleepTracker() {
         left: mode === "bedtime" ? "32px" : "2px",
         transition: "left 0.3s ease"
       }} />
-    </div>
-    <div style={{ position: "relative", display: "inline-block" }} className="tooltip-bedtime">
-      <span
-        style={{
-          fontWeight: "bold",
-          textTransform: "uppercase",
-          textShadow: mode === "bedtime" ? "0 0 8px #c084fc" : "none",
-          transition: "text-shadow 0.3s ease",
-        }}
-      >
-        Bedtime Mode
-      </span>
-      <div className="bedtime-mode">
-        Calculates the best wake-up time based on your bedtime.
+      </div>
+      <div style={{ position: "relative", display: "inline-block" }} className="tooltip-bedtime">
+        <span
+          style={{
+            fontWeight: "bold",
+            textTransform: "uppercase",
+            textShadow: mode === "bedtime" ? "0 0 8px #c084fc" : "none",
+            transition: "text-shadow 0.3s ease",
+          }}
+        >
+          Bedtime Mode
+        </span>
+        <div className="bedtime-mode">
+          Calculates the best wake-up time based on your bedtime.
+        </div>
       </div>
     </div>
-  </div>
 
-  <div
-    style={mode === "bedtime" ?
-      {
-        opacity: 1,
-        height: "auto",
-        overflow: "hidden",
-        transition: "opacity 0.5s ease, height 0.5s ease",
-        pointerEvents: "auto"
-      } :
-      {
-        opacity: 0,
-        height: 0,
-        overflow: "hidden",
-        transition: "opacity 0.5s ease, height 0.5s ease",
-        pointerEvents: "none"
+    <div
+      style={mode === "bedtime" ?
+        {
+          opacity: 1,
+          height: "auto",
+          overflow: "hidden",
+          transition: "opacity 0.5s ease, height 0.5s ease",
+          pointerEvents: "auto"
+        } :
+        {
+          opacity: 0,
+          height: 0,
+          overflow: "hidden",
+          transition: "opacity 0.5s ease, height 0.5s ease",
+          pointerEvents: "none"
+        }
       }
-    }
-  >
+    >
     <div style={{
       marginBottom: "25px",
       borderBottom: "1px solid black",
       paddingBottom: "20px"
-    }}>
-      <label>
-        <span className="bed-alarm-text">
-          Bedtime:
-        </span>
-      </label>
-      <input
-        type="time"
-        value={bedtime}
-        onChange={(e) => setBedtime(e.target.value)}
-        className="input-bedtime"
-      />
-<button
-  onClick={() => {
-    const now = new Date();
-    const hours = now.getHours().toString().padStart(2, '0');
-    const minutes = now.getMinutes().toString().padStart(2, '0');
-    setBedtime(`${hours}:${minutes}`);
-  }}
-  className="button-bednow"
->
-  GO TO BED NOW
-</button>
+      }}>
+        <label>
+          <span className="bed-alarm-text">
+           Bedtime:
+          </span>
+        </label>
+        <input
+          type="time"
+          value={bedtime}
+          onChange={(e) => setBedtime(e.target.value)}
+          className="input-bedtime"
+        />
+      <button
+        onClick={() => {
+        const now = new Date();
+        const hours = now.getHours().toString().padStart(2, '0');
+        const minutes = now.getMinutes().toString().padStart(2, '0');
+        setBedtime(`${hours}:${minutes}`);
+      }}
+      className="button-bednow"
+      >
+      GO TO BED NOW
+      </button>
     </div>
   </div>
+
   <div
     style={mode === "alarm" ?
       {
@@ -608,9 +609,9 @@ function SleepTracker() {
           const isCentral = index === Math.floor(recommendations.length / 2);
           const isHovered = hoveredRecommendation === time;
           const enlarge =
-  isHovered ||
-  (!hoveredRecommendation && selectedRecommendation === time) ||
-  (!hoveredRecommendation && !selectedRecommendation && isCentral);
+    isHovered ||
+    (!hoveredRecommendation && selectedRecommendation === time) ||
+    (!hoveredRecommendation && !selectedRecommendation && isCentral);
           return (
             <li
               key={index}
@@ -640,10 +641,11 @@ function SleepTracker() {
             </li>
           );
         })}
+
       </ul>
       <button
         onClick={confirmSelection}
-       className="button-confirm"
+        className="button-confirm"
       >
         CONFIRM SELECTION
       </button>
@@ -763,187 +765,187 @@ function SleepTracker() {
 
 
   <div className="background-stars">
-  <div>
-  <TipsStar tip = "limit caffeine in the afternoon!" left = "6%" top = "15%"></TipsStar>
-  <TipsStar tip = "try to not use your devices 1 hour before bed" left = "14%" top = "30%"></TipsStar>
-  <TipsStar tip = "try to wake up at the same time everyday!" left = "14%" top = "45%"></TipsStar>
-  <TipsStar tip = "block out sources of light!" left = "6%" top = "73%"></TipsStar>
-  <TipsStar tip = "take a warm shower or bath an hours before bed" left = "16%" top = "60%"></TipsStar>
-  <TipsStar tip = "daily exercise of 20 minutes can improve your sleep!" left = "25%" top = "84%"></TipsStar>
-  <TipsStar tip = "try to have some light exposure for at least 30 minutes a day" left = "15%" top = "94%"></TipsStar>
-  <TipsStar tip = "use relaxing techniques, we can help you find some! scroll down" left = "72%" top = "15%"></TipsStar>
-  <TipsStar tip = "can't fall asleep? try getting out of bed and do something relaxing!" left = "81%" top = "15%"></TipsStar>
-  <TipsStar tip = "try to eat dinner a few hours before bed!" left = "72%" top = "25%"></TipsStar>
-  <TipsStar tip = "need a late snack? try to keep it light!" left = "79%" top = "25%"></TipsStar>
-  <TipsStar tip = "reserve your bed for sleep only" left = "85%" top = "37%"></TipsStar>
-  <TipsStar tip = "keep naps around 20 minutes!" left = "90%" top = "50%"></TipsStar>
-</div>
+    <div>
+    <TipsStar tip = "limit caffeine in the afternoon!" left = "6%" top = "15%"></TipsStar>
+    <TipsStar tip = "try to not use your devices 1 hour before bed" left = "14%" top = "30%"></TipsStar>
+    <TipsStar tip = "try to wake up at the same time everyday!" left = "14%" top = "45%"></TipsStar>
+    <TipsStar tip = "block out sources of light!" left = "6%" top = "73%"></TipsStar>
+    <TipsStar tip = "take a warm shower or bath an hours before bed" left = "16%" top = "60%"></TipsStar>
+    <TipsStar tip = "daily exercise of 20 minutes can improve your sleep!" left = "25%" top = "84%"></TipsStar>
+    <TipsStar tip = "try to have some light exposure for at least 30 minutes a day" left = "15%" top = "94%"></TipsStar>
+    <TipsStar tip = "use relaxing techniques, we can help you find some! scroll down" left = "72%" top = "15%"></TipsStar>
+    <TipsStar tip = "can't fall asleep? try getting out of bed and do something relaxing!" left = "81%" top = "15%"></TipsStar>
+    <TipsStar tip = "try to eat dinner a few hours before bed!" left = "72%" top = "25%"></TipsStar>
+    <TipsStar tip = "need a late snack? try to keep it light!" left = "79%" top = "25%"></TipsStar>
+    <TipsStar tip = "reserve your bed for sleep only" left = "85%" top = "37%"></TipsStar>
+    <TipsStar tip = "keep naps around 20 minutes!" left = "90%" top = "50%"></TipsStar>
+    </div>
 
 
-<div class = "polar-star">
-  <svg viewBox="0 0 100 100" class="polar-svg" xmlns="http://www.w3.org/2000/svg">
-    <polygon points="50,10 60,50 50,90 40,50" />
-    <polygon points="10,50 50,60 90,50 50,40" />
-  </svg>
-  <div class = "polar-tip">follow your sleep cycles! </div>
-</div>
-</div>
+    <div class = "polar-star">
+      <svg viewBox="0 0 100 100" class="polar-svg" xmlns="http://www.w3.org/2000/svg">
+        <polygon points="50,10 60,50 50,90 40,50" />
+        <polygon points="10,50 50,60 90,50 50,40" />
+      </svg>
+      <div class = "polar-tip">follow your sleep cycles! </div>
+    </div>
+  </div>
 
 
-<h2 id = "tips-section" class = "title">
-  Read below for theory behind a good sleep schedule!
-</h2>
+  <h2 id = "tips-section" class = "title">
+    Read below for theory behind a good sleep schedule!
+  </h2>
 
 
 
 
-<div  class = "text-tips">
-  Want to sleep better? Touch the stars!
-</div>
+  <div  class = "text-tips">
+    Want to sleep better? Touch the stars!
+  </div>
 
-<div class = "text-tips2">
- Or click this icon <a href="#tips-section"><span>ℹ️</span></a>!
-</div>
+  <div class = "text-tips2">
+    Or click this icon <a href="#tips-section"><span>ℹ️</span></a>!
+  </div>
 
 
-<div className="rhythm-box">    
-  <h3>⌛️ What's the circadian rhythm?</h3>
-    <p>  It helps living beings respond to changes in their environment in ways that conserve energy, help them find food and allow them to grow and heal. 
+  <div className="rhythm-box">    
+    <h3>⌛️ What's the circadian rhythm?</h3>
+      <p>  It helps living beings respond to changes in their environment in ways that conserve energy, help them find food and allow them to grow and heal. 
       In humans it helps to regulate sleeping, core body temperature, immune system, hormones, metabolism, cognitive function, the body’s reaction to stress. 
       It is controlled by biological clocks in organs and especially a  “clock” in a part of the brain. This clock operates on a cycle slightly longer than 24 hours, in order to maintain alignment with the 24 hours of the planet rotation the clock adjusts itself 
       by about 12 to 18 minutes every day, using environmental cues.
       The most important ones are sleep and light while others include: meals, exercise, social interactions, daily routines and stress.
       Having an aligned circadian rhythm can help you fall asleep and have a better sleeping schedule.
-    </p>
+     </p>
 
     <h3>To mantain a healthy rhythm:</h3>
-  <ul>
-    <li>Keep a regular schedule during the day</li>
-    <li>Implement a bedtime routine: do some relaxing activities like reading a book or a light stretch. Your body will connect these activities to bedtime, which will help you during the process of falling asleep</li>
-    <li>Avoid naps late in the day</li>
-    <li>Avoid screens and bright lights before bed. This inhibits melatonin production, which will make it harder for you to fall asleep</li>
-    <li>Enjoy sunlight during the day</li>
-  </ul>
-</div>
+    <ul>
+      <li>Keep a regular schedule during the day</li>
+      <li>Implement a bedtime routine: do some relaxing activities like reading a book or a light stretch. Your body will connect these activities to bedtime, which will help you during the process of falling asleep</li>
+      <li>Avoid naps late in the day</li>
+      <li>Avoid screens and bright lights before bed. This inhibits melatonin production, which will make it harder for you to fall asleep</li>
+      <li>Enjoy sunlight during the day</li>
+    </ul>
+  </div>
 
 
-<h2 class = "title-tips">
-  More in depth tips! 
-</h2>
+  <h2 class = "title-tips">
+    More in depth tips! 
+  </h2>
 
 
-<div className="tips-wrapper">
-  <div className="tips-scroller">
-    <div className="tip-box2">
-    <h3>☕️ Caffeine!</h3>
-    <p>Try to avoid caffeine and other substances like alchol or nicotine before going to bed.  Using caffeine in the afternoon can be tempting to resist the sleepiness of the afternoon, but it's not reccomended in the long term.
+  <div className="tips-wrapper">
+    <div className="tips-scroller">
+      <div className="tip-box2">
+      <h3>☕️ Caffeine!</h3>
+      <p>Try to avoid caffeine and other substances like alchol or nicotine before going to bed.  Using caffeine in the afternoon can be tempting to resist the sleepiness of the afternoon, but it's not reccomended in the long term.
       Alchol on the other hand can affect the brain in a way that can lower the sleep quality.  Same goes with nicotine as it's a stimulant! It is proved that avoiding these substances 
       may help with a good night sleep. 
-    </p>
-  </div>
+      </p>
+    </div>
 
-  <div className="tip-box2">
-    <h3>📱 Devices</h3>
-    <p> Blue light can affect your circadian rhythm, this can worsen the quality of your sleep.
+    <div className="tip-box2">
+      <h3>📱 Devices</h3>
+      <p> Blue light can affect your circadian rhythm, this can worsen the quality of your sleep.
       It's advisable to avoid using devices 1 hour before bed, but even 20 minutes before can help! The blue light can affect the production of melatonin during the evening
       and using eletronical devices can keep your brain from winding down which can reflect on your ability to fall asleep.
-    </p>
-  </div>
+      </p>
+    </div>
 
-  <div className="tip-box2">
-    <h3>💡Block out light</h3>
-    <p> During the night, block out sources of light. This can affect your body in the production of melatonin and make it difficult
+    <div className="tip-box2">
+      <h3>💡Block out light</h3>
+      <p> During the night, block out sources of light. This can affect your body in the production of melatonin and make it difficult
       for you to fall asleep. The importance of light is connected to your circadian rhythm, in fact as sun sets the brain begins to produce melatonin, an hormone inducing sleepiness.
       Also your body temperature starts to drop which is typical behavior of your body when it's ready to fall asleep.
-    </p>
-  </div>
+      </p>
+    </div>
 
-   <div className="tip-box3">
-  <h3>✨ Sleep cycles</h3>
-  <p>
-    Follow your sleep cycle! Sleep cycles are made of 1.5 hours each, using our site you can find the best time to go to bed or the best time to wake up at!
-    One sleep cycles is divided between 2 different kind of stages, the Non-REM sleep and the REM sleep. Waking up between stages can make you feel tired even if you've just woken up.
-    Studies suggest that it's better to wake up in between cycles. Our site is here to help you accomplish this goal!
-  </p>
-</div>
+    <div className="tip-box3">
+      <h3>✨ Sleep cycles</h3>
+      <p>
+      Follow your sleep cycle! Sleep cycles are made of 1.5 hours each, using our site you can find the best time to go to bed or the best time to wake up at!
+      One sleep cycles is divided between 2 different kind of stages, the Non-REM sleep and the REM sleep. Waking up between stages can make you feel tired even if you've just woken up.
+      Studies suggest that it's better to wake up in between cycles. Our site is here to help you accomplish this goal!
+      </p>
+    </div>
 
 
-   <div className = "tip-box2">
-    <h3>🧘 Relaxing techniques</h3>
-    <p> Simple relaxing techniques can be reading a book or listening to soothing music. You can also try some breathing exercises, for example:
-      place one of your hands on your stomach and the other on your chest, inhale slowly directing your breath to the belly, concentrate on how your hands move, exhale slowly and feel how the hand 
-      on your stomach gradually fall. You can also try some meditation techniques, we suggest the 
-      <span className="tool-tip"><strong> body scan meditation</strong>
-        <span className="tooltip-text">
-          <ol>
-            <li> Lie in bed with your hands at your side.</li>
-            <li>Spend a few seconds concentrating on your breathing</li>
-            <li>Concentrate on the sensations you feel in your feet</li>
-            <li> Breathe deeply and imagine the breath travelling to your feet. Exhale and let your feet dissolve from your awarness</li>
-            <li>Move your attention progressively upward until reaching your head.</li>
-            <li> Finish by becoming aware of your whole body and breath deeply</li>
-          </ol>
-        </span>
-      </span>.
-    </p>
-  </div>
+    <div className = "tip-box2">
+      <h3>🧘 Relaxing techniques</h3>
+      <p> Simple relaxing techniques can be reading a book or listening to soothing music. You can also try some breathing exercises, for example:
+        place one of your hands on your stomach and the other on your chest, inhale slowly directing your breath to the belly, concentrate on how your hands move, exhale slowly and feel how the hand 
+        on your stomach gradually fall. You can also try some meditation techniques, we suggest the 
+        <span className="tool-tip"><strong> body scan meditation</strong>
+          <span className="tooltip-text">
+            <ol>
+              <li> Lie in bed with your hands at your side.</li>
+              <li>Spend a few seconds concentrating on your breathing</li>
+              <li>Concentrate on the sensations you feel in your feet</li>
+              <li> Breathe deeply and imagine the breath travelling to your feet. Exhale and let your feet dissolve from your awarness</li>
+              <li>Move your attention progressively upward until reaching your head.</li>
+             <li> Finish by becoming aware of your whole body and breath deeply</li>
+            </ol>
+          </span>
+        </span>.
+      </p>
+    </div>
 
-  <div className = "tip-box2">
-    <h3>⏰ Wake up</h3>
-    <p>Try to wake up at the same time everyday, even in the weekends. In this way tou can help your body get accustomed
-      to an healthy sleep routine, which is difficult if you don't follow a similar routine every day.
-    </p>
-  </div>
+    <div className = "tip-box2">
+      <h3>⏰ Wake up</h3>
+      <p>Try to wake up at the same time everyday, even in the weekends. In this way tou can help your body get accustomed
+        to an healthy sleep routine, which is difficult if you don't follow a similar routine every day.
+      </p>
+    </div>
 
-  <div className="tip-box2">
-    <h3>🍽️ Dinner</h3>
-    <p>Have dinner a few hours before your bedtime, allow your body to digest. Going to bed with an heavy stomach can affect the quality of your sleep and the amount of time
-      you will actually take to fall asleep. Also not eating is not an option as you may wake up in the middle of the night hungry which will disrupt your sleep.
-    </p>
-  </div>
+    <div className="tip-box2">
+      <h3>🍽️ Dinner</h3>
+      <p>Have dinner a few hours before your bedtime, allow your body to digest. Going to bed with an heavy stomach can affect the quality of your sleep and the amount of time
+       you will actually take to fall asleep. Also not eating is not an option as you may wake up in the middle of the night hungry which will disrupt your sleep.
+      </p>
+    </div>
 
  
 
-  <div className="tip-box2">
-    <h3>🏃‍♂️‍➡️ Daily exercise</h3>
-    <p>A daily walk of 20 minutes is enough to already improve your sleep schedule. Other than improving your health, exercising can also improve your mental health. It's always advisable! Experts advise to avoid heavy exercise
-      close to bedtime, instead try some relaxing activities or light exercises like yoga!
-    </p>
-  </div>
+    <div className="tip-box2">
+      <h3>🏃‍♂️‍➡️ Daily exercise</h3>
+      <p>A daily walk of 20 minutes is enough to already improve your sleep schedule. Other than improving your health, exercising can also improve your mental health. It's always advisable! Experts advise to avoid heavy exercise
+        close to bedtime, instead try some relaxing activities or light exercises like yoga!
+      </p>
+    </div>
 
-  <div className="tip-box2">
-    <h3>🛁 Warm bath</h3>
-    <p>Take a warm shower or a warm bath an hour before bed. This will help with the natural temperature
+    <div className="tip-box2">
+      <h3>🛁 Warm bath</h3>
+      <p>Take a warm shower or a warm bath an hour before bed. This will help with the natural temperature
       regulation process, improving sleep as a result.
-    </p>
-  </div>
+      </p>
+    </div>
 
     
 
-  <div className = "tip-box2"> 
-     <h3>😴 Naps</h3>
-    <p> Keep naps around 20 minutes and take them early in the afternoon. The best time to take a nap is shortly after lunch. If you take it too late in the day, or take one too long,
-      you probably will have more troubles falling asleep in the night. 
-    </p>
-  </div>
+    <div className = "tip-box2"> 
+      <h3>😴 Naps</h3>
+      <p> Keep naps around 20 minutes and take them early in the afternoon. The best time to take a nap is shortly after lunch. If you take it too late in the day, or take one too long,
+       you probably will have more troubles falling asleep in the night. 
+      </p>
+    </div>
 
-  <div className = "tip-box2">
-    <h3>🛏️ Get out of bed!</h3>
-    <p>Can't fall asleep? Try to get out of bed and do something relaxing instead. Read a few pages of a book or try some relaxing techniques.
+    <div className = "tip-box2">
+      <h3>🛏️ Get out of bed!</h3>
+      <p>Can't fall asleep? Try to get out of bed and do something relaxing instead. Read a few pages of a book or try some relaxing techniques.
       It's better to not associate frustation with the environment of the bed as it can affect your next sleep. Also in the mornings try to not stay in bed too long even if tempting.
-    </p>
-  </div>
+      </p>
+    </div>
 
-  <div className="tip-box2">
-   <h3>☀️ Light exposure</h3>
-    <p> Try to take a dose of natural light everyday, especially in the morning. In fact as exposure to light increases, melatonin production stops and temperature arises promoting wakefulness.
-      This will help regulate your circadian rhythm and as a consequence it will also help you with
-      your sleeping schedule.
-    </p>
-  </div>
-  </div>
+    <div className="tip-box2">
+     <h3>☀️ Light exposure</h3>
+      <p> Try to take a dose of natural light everyday, especially in the morning. In fact as exposure to light increases, melatonin production stops and temperature arises promoting wakefulness.
+        This will help regulate your circadian rhythm and as a consequence it will also help you with
+        your sleeping schedule.
+     </p>
+    </div>
+    </div>
 
-  <ReferenceTab></ReferenceTab>
+    <ReferenceTab></ReferenceTab>
   
   </div>
 </div>
