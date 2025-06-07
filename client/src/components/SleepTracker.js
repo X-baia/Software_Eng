@@ -23,6 +23,7 @@ function SleepTracker() {
   const [alarmTime, setAlarmTime] = useState("");
   const [fallAsleepTime, setFallAsleepTime] = useState(15);
   const [age, setAge] = useState("");
+  const [errorAge, setErrorAge] = useState("");
   const [recommendations, setRecommendations] = useState([]);
   const [selectedRecommendation, setSelectedRecommendation] = useState("");
   const [hoveredRecommendation, setHoveredRecommendation] = useState(null);
@@ -170,12 +171,20 @@ function SleepTracker() {
       return;
     }
 
+
     const log = {
       date: new Date().toLocaleDateString(),
       hours: sleepDurationHours,
       selectedTime: selectedRecommendation,
       mode,
     };
+
+    const alreadyLogged = sleepLog.some((entry) => entry.date === log.date);
+    if (alreadyLogged) {
+      alert("You’ve already logged your sleep for today!");
+      return;
+    }
+
 
     //used for logging in the Sleep Log the amount of time you've slept based on the computations
     const response = await fetch("http://localhost:5001/api/sleepLogs", {
@@ -421,11 +430,22 @@ function SleepTracker() {
       </span>
     </label>
     {!user ? (
+      <>
       <input className="input-age"
         type="number"
         value={age}
-        onChange={(e) => setAge(e.target.value)}
+        onChange={(e) => {
+        const value = Number(e.target.value);
+        if (value < 0) {
+          setErrorAge("You've inserted a negative age, please insert an appropriate value")
+        }else{
+          setErrorAge("");
+          setAge(value)
+        }
+        }}
       />
+        {errorAge && <p class= "errorAge-message">{errorAge}</p>}
+      </>
     ) : (
       <p class= "age">
         {user.age}
