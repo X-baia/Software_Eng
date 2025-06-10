@@ -34,7 +34,8 @@ function SleepTracker() {
   const [authFields, setAuthFields] = useState({ username: "", password: "", dob: "" });
   const [selectedLog, setSelectedLog] = useState(null);
   const [editedHours, setEditedHours] = useState("");
-
+  const [prevLog, setprevLog] = useState(null);
+  const [newLog, setnewLog] = useState(null);
 
   useEffect(() => {
     fetch("http://localhost:5001/api/sleepLogs", { credentials: "include" })
@@ -179,9 +180,10 @@ function SleepTracker() {
       mode,
     };
 
-    const alreadyLogged = sleepLog.some((entry) => entry.date === log.date);
-    if (alreadyLogged) {
-      alert("You’ve already logged your sleep for today!");
+    const existingLog = sleepLog.find((entry) => entry.date === log.date);
+    if (existingLog) {
+      setprevLog(existingLog);
+      setnewLog(log);
       return;
     }
 
@@ -201,6 +203,44 @@ function SleepTracker() {
       alert("You must be logged in to log data.");
     }
   };
+
+
+  const handleSubstitute = async () => {
+    if (!prevLog && !newLog) return;
+    try {
+      const res = await fetch(`http://localhost:5001/api/sleepLogs/${prevLog._id}`, {
+      method: "DELETE",
+      credentials: "include",
+    });
+
+    const result = await res.json();
+    console.log("Delete response:", res.status, result);
+
+    if (res.ok) {
+      setprevLog(null);
+      const response = await fetch("http://localhost:5001/api/sleepLogs", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      credentials: "include",
+      body: JSON.stringify(newLog),
+    });
+
+    if (response.ok) {
+      setSleepLog([...sleepLog, newLog]);
+      setnewLog(null);
+      alert("Sleep time substituted correctly!");
+    } else {
+      alert("failed to substitute the sleep time");
+    }
+      refreshSleepLogs();
+    } else {
+      alert(result.error || "Failed to delete the previuos log.");
+    }
+    } catch (err) {
+      console.error("Delete error:", err);
+      alert("Failed to delete log.");
+    }
+  }
 
   const clearSleepData = async () => {
     const res = await fetch("http://localhost:5001/api/sleepLogs", {
@@ -669,6 +709,39 @@ function SleepTracker() {
       >
         CONFIRM SELECTION
       </button>
+
+      {prevLog && newLog &&(
+        <div style={{
+        position: "fixed", top: 0, left: 0, right: 0, bottom: 0,
+        backgroundColor: "rgba(0, 0, 0, 0.85)",
+        display: "flex", alignItems: "center", justifyContent: "center",
+        zIndex: 1000,
+        }}>
+          <div className="editor-box">
+          <button
+              onClick={() => setprevLog(null)}
+              className="close-editor"
+            >
+              &times;
+            </button>
+
+            <h3 style={{ color: "#fff" }}>Substitute the log with the new one?</h3>
+            <div style={{ marginTop: "20px" }}>
+            <button 
+            className="button-save" 
+            onClick={handleSubstitute}>
+              Yes
+            </button>
+            <button 
+            className="button-delete"
+            onClick={() => setprevLog(null)}>
+              No
+            </button>
+          </div>
+          </div>
+        </div>
+      )}
+
     </>
   )}
 </div>
