@@ -16,7 +16,7 @@
     box-shadow: 0 0 15px rgba(192, 132, 252, 0.8);
 }
 
-.editor-box{
+.popup-log{
     background-color: #1e1e1e;
     padding: 30px;
     border-radius: 10px;
@@ -27,7 +27,7 @@
     box-shadow: 0 0 20px #c084fc;
 }
 
-.close-editor{
+.close-popup-log{
     position: absolute;
     top: 10px;
     right: 15px;
@@ -39,7 +39,7 @@
     transition: transform 0.2s ease;
 }
 
-.close-editor:active{
+.close-popup-log:active{
     scale: 0.9;
 }
 

@@ -717,10 +717,10 @@ function SleepTracker() {
         display: "flex", alignItems: "center", justifyContent: "center",
         zIndex: 1000,
         }}>
-          <div className="editor-box">
+          <div className="popup-log">
           <button
               onClick={() => setprevLog(null)}
-              className="close-editor"
+              className="close-popup-log"
             >
               &times;
             </button>
@@ -807,10 +807,10 @@ function SleepTracker() {
         display: "flex", alignItems: "center", justifyContent: "center",
         zIndex: 1000,
         }}>
-        <div className="editor-box">
+        <div className="popup-log">
           <button
               onClick={() => setSelectedLog(null)}
-              className="close-editor"
+              className="close-popup-log"
             >
               &times;
             </button>
