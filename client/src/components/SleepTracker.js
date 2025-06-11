@@ -206,9 +206,13 @@ function SleepTracker() {
 
 
   const handleSubstitute = async () => {
-    if (!prevLog && !newLog) return;
-    try {
-      const res = await fetch(`http://localhost:5001/api/sleepLogs/${prevLog._id}`, {
+  if (!prevLog || !newLog || !prevLog._id) {
+    console.warn("Missing prevLog or newLog or prevLog._id");
+    return;
+  }
+
+  try {
+    const res = await fetch(`http://localhost:5001/api/sleepLogs/${prevLog._id}`, {
       method: "DELETE",
       credentials: "include",
     });
@@ -218,29 +222,31 @@ function SleepTracker() {
 
     if (res.ok) {
       setprevLog(null);
-      const response = await fetch("http://localhost:5001/api/sleepLogs", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      credentials: "include",
-      body: JSON.stringify(newLog),
-    });
 
-    if (response.ok) {
-      setSleepLog([...sleepLog, newLog]);
-      setnewLog(null);
-      alert("Sleep time substituted correctly!");
-    } else {
-      alert("failed to substitute the sleep time");
-    }
+      const response = await fetch("http://localhost:5001/api/sleepLogs", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+        body: JSON.stringify(newLog),
+      });
+
+      if (response.ok) {
+        setSleepLog([...sleepLog, newLog]);
+        setnewLog(null);
+        alert("Sleep time substituted correctly!");
+      } else {
+        alert("Failed to substitute the sleep time.");
+      }
+
       refreshSleepLogs();
     } else {
-      alert(result.error || "Failed to delete the previuos log.");
+      alert(result.error || "Failed to delete the previous log.");
     }
-    } catch (err) {
-      console.error("Delete error:", err);
-      alert("Failed to delete log.");
-    }
+  } catch (err) {
+    console.error("Delete error:", err);
+    alert("Failed to delete log.");
   }
+};
 
   const clearSleepData = async () => {
     const res = await fetch("http://localhost:5001/api/sleepLogs", {
